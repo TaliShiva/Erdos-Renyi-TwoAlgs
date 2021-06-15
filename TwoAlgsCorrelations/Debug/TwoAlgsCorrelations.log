@@ -1,7 +1,0 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppClean.targets(77,5): warning : Access to the path 'f:\programming projects\post graduate\twoalgscorrelations\debug\twoalgscorrelations.exe' is denied.
-  Scanning sources for module dependencies...
-  Foo.ixx
-  Compiling...
-  Foo.ixx
-  main.cpp
-LINK : fatal error LNK1104: cannot open file 'F:\Programming projects\Post Graduate\TwoAlgsCorrelations\Debug\TwoAlgsCorrelations.exe'
