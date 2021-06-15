@@ -1,0 +1,10 @@
+﻿  RandomGraphFactory.cpp
+F:\Programming projects\Post Graduate\TwoAlgsCorrelations\TwoAlgsCorrelations\Graph\Graph.h(15,33): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  RandomGraphFactory.h
+F:\Programming projects\Post Graduate\TwoAlgsCorrelations\TwoAlgsCorrelations\Graph\Graph.h(15,33): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  main.cpp
+F:\Programming projects\Post Graduate\TwoAlgsCorrelations\TwoAlgsCorrelations\Graph\Graph.h(15,33): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  Generating Code...
+x64\Debug\Graph.obj : warning LNK4042: object specified more than once; extras ignored
+x64\Debug\RandomGraphFactory.obj : warning LNK4042: object specified more than once; extras ignored
+  TwoAlgsCorrelations.vcxproj -> F:\Programming projects\Post Graduate\TwoAlgsCorrelations\x64\Debug\TwoAlgsCorrelations.exe

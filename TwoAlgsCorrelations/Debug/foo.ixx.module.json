@@ -1,0 +1,9 @@
+{
+    "Version": "1.1",
+    "Data": {
+        "Source": "f:\\programming projects\\post graduate\\twoalgscorrelations\\twoalgscorrelations\\foo.ixx",
+        "ProvidedModule": "Foo",
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
