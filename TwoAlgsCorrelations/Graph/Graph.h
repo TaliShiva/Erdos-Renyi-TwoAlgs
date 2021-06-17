@@ -14,5 +14,7 @@ public:
 	bool IsJoined(const unsigned i, const unsigned j) const override { return _adjacency_matrix[i][j]; }
 	unsigned Size() const override {return _adjacency_matrix.size(); }
 
+	std::vector<short> GetNeighbours(short i) override;
+
 	std::string ToJson() const override;
 };

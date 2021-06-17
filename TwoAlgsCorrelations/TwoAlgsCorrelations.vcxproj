@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Graph\CustomGraphFactory.cpp" />
     <ClCompile Include="Graph\Graph.cpp" />
     <ClCompile Include="Graph\Graph.h" />
     <ClCompile Include="Graph\RandomGraphFactory.cpp" />
@@ -149,6 +150,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FlowersAlg\Edmonds.h" />
+    <ClInclude Include="Graph\CustomGraphFactory.h" />
     <ClInclude Include="Graph\IGraph.h" />
     <ClInclude Include="Graph\IGraphFactory.h" />
   </ItemGroup>

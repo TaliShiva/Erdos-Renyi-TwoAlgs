@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 class IGraph
 {
@@ -17,6 +18,8 @@ public:
 	virtual unsigned Size() const = 0;
 
 	virtual std::string ToJson() const = 0;
+
+	virtual std::vector<short> GetNeighbours(short i) = 0;
 };
 
 using IGraphPtr = std::shared_ptr<IGraph>;

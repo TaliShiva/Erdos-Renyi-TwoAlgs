@@ -25,9 +25,14 @@
     <ClCompile Include="Graph\RandomGraphFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graph\CustomGraphFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graph\IGraphFactory.h" />
     <ClInclude Include="Graph\IGraph.h" />
+    <ClInclude Include="Graph\CustomGraphFactory.h" />
+    <ClInclude Include="FlowersAlg\Edmonds.h" />
   </ItemGroup>
 </Project>
