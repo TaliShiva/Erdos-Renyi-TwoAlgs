@@ -21,6 +21,18 @@ public:
 
 	};*/
 
+	/// <summary>
+	/// Предполагаем, что алгоритм работает с двудольным графом и находит именно для него эти паросочетания
+	/// </summary>
+	void KhunAlgorithm(const IGraphPtr& graph, const int firstGraphFraction, const int secondGraphFraction) {
+		auto graph_size = (*graph).Size();
+		if ((*graph).Size() % 2 == 1) {
+			std::cerr << "This graph not biparticipate";
+			throw exception("This graph not biparticipate");
+		}
+
+	}
+
 	void PreliminaryGreedyMatchBuilding(const IGraphPtr& graph) {
 		std::vector<bool> tagged_vertices{};
 		int graph_size = (*graph).Size();
