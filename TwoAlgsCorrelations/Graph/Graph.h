@@ -17,4 +17,6 @@ public:
 	std::vector<short> GetNeighbours(short i) override;
 
 	std::string ToJson() const override;
+
+	int GetRoot() const override;
 };

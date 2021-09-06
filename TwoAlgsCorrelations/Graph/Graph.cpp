@@ -39,3 +39,13 @@ std::string Graph::ToJson() const {
     ss << "]";
     return ss.str();
 }
+
+int Graph::GetRoot() const {
+    for (short i = 0; i < _adjacency_matrix.size(); i++) {
+        for (short j = 0; j < _adjacency_matrix.size(); j++) {
+            if (_adjacency_matrix[i][j] == true) {
+                return 0;
+            }
+    }
+    
+}
