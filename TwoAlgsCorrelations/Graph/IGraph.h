@@ -22,6 +22,7 @@ public:
 	virtual std::vector<short> GetNeighbours(short i) = 0;
 
 	virtual int GetRoot() const = 0;
+
 };
 
 using IGraphPtr = std::shared_ptr<IGraph>;

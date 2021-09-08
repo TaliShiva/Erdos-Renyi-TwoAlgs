@@ -6,7 +6,7 @@
 std::vector<short> Graph::GetNeighbours(short i) {
     std::vector<short> neighbours{};
     for (short j = 0; j < _adjacency_matrix.size(); j++) {
-        if (_adjacency_matrix[i][j] == true) {
+        if (_adjacency_matrix[i][j] != -1) {
             neighbours.push_back(j);
         }
     }
@@ -46,6 +46,6 @@ int Graph::GetRoot() const {
             if (_adjacency_matrix[i][j] == true) {
                 return 0;
             }
+        }
     }
-    
 }
