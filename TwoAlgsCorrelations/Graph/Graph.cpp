@@ -6,7 +6,7 @@
 std::vector<short> Graph::GetNeighbours(short i) {
     std::vector<short> neighbours{};
     for (short j = 0; j < _adjacency_matrix.size(); j++) {
-        if (_adjacency_matrix[i][j] != -1) {
+        if (_adjacency_matrix[i][j] != false) {
             neighbours.push_back(j);
         }
     }
@@ -38,6 +38,11 @@ std::string Graph::ToJson() const {
     }
     ss << "]";
     return ss.str();
+}
+
+std::vector<std::vector<bool>> Graph::GetCopyOfAdjacencyMatrix() const
+{
+    return _adjacency_matrix;
 }
 
 int Graph::GetRoot() const {

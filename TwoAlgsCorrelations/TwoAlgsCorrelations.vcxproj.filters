@@ -34,5 +34,7 @@
     <ClInclude Include="Graph\IGraph.h" />
     <ClInclude Include="Graph\CustomGraphFactory.h" />
     <ClInclude Include="FlowersAlg\Edmonds.h" />
+    <ClInclude Include="BnB\BnB.h" />
+    <ClInclude Include="BnB\BnBTreeNode.h" />
   </ItemGroup>
 </Project>

@@ -23,6 +23,7 @@ public:
 
 	virtual int GetRoot() const = 0;
 
+	virtual std::vector<std::vector<bool>> GetCopyOfAdjacencyMatrix() const = 0;
 };
 
 using IGraphPtr = std::shared_ptr<IGraph>;

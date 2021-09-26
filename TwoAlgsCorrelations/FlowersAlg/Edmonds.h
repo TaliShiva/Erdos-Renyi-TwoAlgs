@@ -6,6 +6,8 @@
 #include "IGraph.h"
 
 
+class CalculatedTreeNode;
+
 class Edmonds
 {
 public:
@@ -56,7 +58,7 @@ public:
 
 		for (int i = 0; i < graph_size; ++i)
 			base[i] = i;
-		
+
 		int root = (*graph).GetRoot();
 		used_vertexes[root] = true;
 		int qh = 0, qt = 0; // какие-то обоссаные счётчики
@@ -102,7 +104,7 @@ public:
 
 	/// <summary>
 	/// Функция сжимает цветки
-	/// 
+	///
 	/// </summary>
 	/// <param name="a">чётная вершина а в нечётном цикле, от которой нашли цветок</param>
 	/// <param name="b">чётная вершина b в нечётном цикле, которая является root или принадлежит и паросочетанию и дереву путей </param>
@@ -118,7 +120,7 @@ public:
 			if (match[a] == -1) // дошли до корня
 			{
 				break;
-			} 
+			}
 			a = p[match[a]];
 		}
 		// поднимаемся от вершины b, пока не найдём помеченную вершину
@@ -133,7 +135,6 @@ public:
 
 	void PreliminaryGreedyMatchBuilding(const IGraphPtr& graph)
 	{
-		
 		int graph_size = (*graph).Size();
 		for (short vertex_num = 0; vertex_num < graph_size; vertex_num++)
 		{
@@ -145,7 +146,7 @@ public:
 			if (_match[i] == false)
 			{
 				// если эта вершина ещё не помечена
-				/*auto neighbour : (*graph).GetNeighbours(i)*/
+				/*auto neighbour : (*graph).GetNeighbours(i)#1#
 				for (size_t j = 0; j < (*graph).) // TODO: возможно кривое место, но вроде как нормальное
 				{
 					if (_match[neighbour] == false)
@@ -157,47 +158,11 @@ public:
 						_match[i] = _matches_matrix[i][neighbour]; //отмечаем вторую
 						break;
 					}
-				}
+				}*/
 			}
 		}
 	}
+}
 
 
-	std::string ToJson() const
-	{
-		std::stringstream ss;
-		ss << "\"graph\": " << "[" << std::endl;
-		unsigned row_idx = 0;
-		for (const auto& row : _matches_matrix)
-		{
-			row_idx++;
-			ss << "[";
-			unsigned elem_idx = 0;
-			for (const auto elem : row)
-			{
-				elem_idx++;
-				ss << elem;
-				if (elem_idx != row.size())
-				{
-					ss << ",";
-				}
-			}
-			if (row_idx != _matches_matrix.size())
-			{
-				ss << "],";
-			}
-			else
-			{
-				ss << "]";
-			}
-			ss << std::endl;
-		}
-		ss << "]" << std::endl;
-		for (auto elem : _match)
-		{
-			ss << elem << ",";
-		}
-		
-		return ss.str();
-	}
-};
+	

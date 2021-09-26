@@ -150,6 +150,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BnB\BnB.h" />
+    <ClInclude Include="BnB\BnBTreeNode.h" />
     <ClInclude Include="FlowersAlg\Edmonds.h" />
     <ClInclude Include="Graph\CustomGraphFactory.h" />
     <ClInclude Include="Graph\IGraph.h" />
