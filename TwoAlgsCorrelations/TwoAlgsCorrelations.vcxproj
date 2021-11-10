@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="IlyevAlgs\A2Alg.cpp" />
     <ClCompile Include="Graph\CustomGraphFactory.cpp" />
     <ClCompile Include="Graph\Graph.cpp" />
     <ClCompile Include="Graph\Graph.h" />
@@ -150,6 +151,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IlyevAlgs\A2Alg.h" />
     <ClInclude Include="BnB\BnB.h" />
     <ClInclude Include="BnB\BnBTreeNode.h" />
     <ClInclude Include="FlowersAlg\Edmonds.h" />

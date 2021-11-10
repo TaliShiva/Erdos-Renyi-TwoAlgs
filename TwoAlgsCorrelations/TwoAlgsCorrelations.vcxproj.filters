@@ -28,6 +28,9 @@
     <ClCompile Include="Graph\CustomGraphFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IlyevAlgs\A2Alg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graph\IGraphFactory.h" />
@@ -36,5 +39,6 @@
     <ClInclude Include="FlowersAlg\Edmonds.h" />
     <ClInclude Include="BnB\BnB.h" />
     <ClInclude Include="BnB\BnBTreeNode.h" />
+    <ClInclude Include="IlyevAlgs\A2Alg.h" />
   </ItemGroup>
 </Project>
