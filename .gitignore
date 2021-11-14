@@ -38,3 +38,5 @@ bld/
 *.pidb
 *.svclog
 *.scc
+*.ipch
+*.suo

@@ -42,9 +42,9 @@ class BranchAndBounds
 			return _general_best_distance;
 		}
 
-		if ((*treeNode).checkEmpty()) // ïîëó÷èëñÿ ïóñòîé ãðàô
+		if ((*treeNode).checkEmpty()) // получился пустой граф 
 		{
-			return _general_best_distance; // ïî èäåå íå äîëæíû ñþäà ïîïàäàòü
+			return _general_best_distance; // по идее не должны сюда попадать 
 		}
 
 		if (!(*treeNode).isPossibleClusterGraph()) // Проверка ситуаций, в допустимую ноду дерева мы попали или нет, может ли быть такой граф
@@ -52,9 +52,9 @@ class BranchAndBounds
 			return _general_best_distance;
 		}
 
-		if ((*treeNode).checkFullMarking()) // åñëè ýòî óæå ïîëíîñòüþ ðàçìå÷åííûé ãðàô
+		if ((*treeNode).checkFullMarking()) // если это уже полностью размеченный граф 
 		{
-			//Todo: äîáàâèòü â ñïèñîê ðåøåíèé ýòîò ãðàô
+			//Todo: добавить в список решений этот граф 
 			auto current_distance = (*treeNode).getCurrentDistance();
 			_general_best_distance = current_distance;
 			return current_distance; // Âîò îíî ðåøåíèå
@@ -64,7 +64,7 @@ class BranchAndBounds
 		// иначе делим на две ветки, где по одной ветке маркируется выбранное ребро, а в другой ветке оно удаляется из графа,
 		// проверка маркированной матрицы, по идее, включает в себя как от просмотр маркированной матрицы, а удаление ребра увеличивает дистанцию 
 
-		MatrixCoordinate next_edge = GetNextEdge(); // ïîëó÷àåì ñëåäóþùåå ðåáðî, êîòîðîå áóäåò ìàðêèðîâàíî, ëèáî óäàëåíî
+		MatrixCoordinate next_edge = GetNextEdge(); // получаем следующее ребро, которое будет маркировано, либо удалено 
 
 		// сперва проведём симуляцию по ветке с маркировкой рёбер 
 		CalculatedTreeNode calculate_marked_tree_node_copy = CalculatedTreeNode(treeNode, _general_best_distance);
