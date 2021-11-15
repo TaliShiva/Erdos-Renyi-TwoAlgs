@@ -1,22 +1,60 @@
 #include "A2Alg.h"
 
+#include <random>
+
 
 A2Alg::A2Alg(const std::vector<std::vector<bool>>& adjacency_matrix, int matrix_size, int cluster_size,
-	const std::vector<std::vector<bool>>& m_graph)
+             const std::vector<std::vector<bool>>& m_graph, const std::vector<std::vector<bool>>& k_graph)
 	: _adjacency_matrix(adjacency_matrix),
-	_matrix_size(matrix_size),
-	_cluster_size(cluster_size),
-	_m_graph(m_graph)
+	  _matrix_size(matrix_size),
+	  _cluster_size(cluster_size),
+	  _m_graph(m_graph),
+	  _k_graph(k_graph)
 {
 }
 
 void A2Alg::startCreateCluster()
 {
-	getRandomVertex(); //выбор произвольной вершины и добавление её в _k_graph
-
- 
+	std::vector<std::vector<bool>> k_graph{};
+	std::vector<bool> vertecises_array{}; // массив вершин, через который идёт заполнение k_graph-a
+	// проверяем, остались ли какие-то вершины, если нет то выходим из алгоритма
+	getRandomVertexIfPossible(vertecises_array); //выбор произвольной вершины и добавление её в _k_graph
+	while (checkPossibleContinue())
+	{
+		if (getClusterSize() < p) // проверяем  |K_i| < p  
+		{
+			if (findNeighbourVertex()) // ищем подходящих соседей
+			{
+				addNeighbourVertex(); // дополняем кластерный граф
+			}
+		}
+		supplementMGraph(); //пополняем m graph
+		cutKGraphFromAdjMatrix(); // аккуратно удаляем i-й кластер
+	}
 }
 
+/// <summary>
+/// 
+/// </summary>
+/// <returns> true если с этим алгоритмом ещё можно работать</returns>
+bool A2Alg::checkPossibleContinue()
+{
+	for (int i = 0; i < _matrix_size; i++)
+	{
+		for (int j = 0; j < _matrix_size; j++)
+		{
+			if (_adjacency_matrix[i][j] != false)
+				return true;
+		}
+	}
+}
+
+void A2Alg::getRandomVertexIfPossible(std::vector<bool> & vertecises_set)
+{
+	std::mt19937 gen(1729);
+	std::uniform_real_distribution<> distr(0, _matrix_size);
+	vertecises_set[distr(gen)] = true;
+}
 
 bool isPossibleClusterGraph()
 {

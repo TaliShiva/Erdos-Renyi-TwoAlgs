@@ -40,3 +40,5 @@ bld/
 *.scc
 *.ipch
 *.suo
+.vs
+/.vs

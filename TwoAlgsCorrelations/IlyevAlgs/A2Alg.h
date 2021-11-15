@@ -16,15 +16,18 @@ class A2Alg
 	
 public:
 	A2Alg(const std::vector<std::vector<bool>>& adjacency_matrix, int matrix_size, int cluster_size,
-	      const std::vector<std::vector<bool>>& m_graph);
+	      const std::vector<std::vector<bool>>& m_graph, const std::vector<std::vector<bool>>& k_graph);
 
 	void startCreateCluster(); // начинаем построение кластера - шаг 2 и 3 по сути
 
+	
 	int getNeighbourIndex(); // получаем номер соседней вершины
 
 
 	bool isPossibleClusterGraph();
 
 	int checkNeighbours(int& diameter, std::vector<int> vertices);
-	
+private:
+	bool checkPossibleContinue(); // проверка матрицы на пустоту - условие выхода из алгоритма
+	void getRandomVertexIfPossible(std::vector<bool>& vertecises_set);
 };
