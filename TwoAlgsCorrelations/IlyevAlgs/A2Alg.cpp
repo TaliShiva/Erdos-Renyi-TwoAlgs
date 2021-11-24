@@ -21,17 +21,35 @@ void A2Alg::startCreateCluster()
 	getRandomVertexIfPossible(vertecises_array); //выбор произвольной вершины и добавление еЄ в _k_graph
 	while (checkPossibleContinue())
 	{
-		if (getClusterSize() < p) // провер€ем  |K_i| < p  
+		if (getClusterSize(vertecises_array) <= _cluster_size) // провер€ем  |K_i| < p  
 		{
-			if (findNeighbourVertex()) // ищем подход€щих соседей
+			if (findNeighbourVertex(vertecises_array)) // ищем подход€щих соседей
 			{
-				addNeighbourVertex(); // дополн€ем кластерный граф
+				addNeighbourVertexToKGraph(vertecises_array, k_graph); // дополн€ем кластерный граф
+			}
+			else
+			{
+				// нет подход€щих соседей
 			}
 		}
-		supplementMGraph(); //пополн€ем m graph
+		supplementMGraph(k_graph); //пополн€ем m graph
 		cutKGraphFromAdjMatrix(); // аккуратно удал€ем i-й кластер
 	}
 }
+
+void  A2Alg::supplementMGraph(std::vector<std::vector<bool>>& k_graph)
+{
+	for (int i = 0; i < _matrix_size; i++)
+	{
+		for (int j = 0; j < _matrix_size; j++)
+		{
+			if (k_graph[i][j] != false)
+				_m_graph[i][j] = true;
+		}
+	}
+}
+
+
 
 /// <summary>
 /// 
@@ -49,7 +67,58 @@ bool A2Alg::checkPossibleContinue()
 	}
 }
 
-void A2Alg::getRandomVertexIfPossible(std::vector<bool> & vertecises_set)
+/// <summary>
+/// ѕолучить размер кластера, который рассматриваем в насто€щий момент, 
+/// </summary>
+/// <param name="vertecises_set"></param>
+/// <returns></returns>
+int A2Alg::getClusterSize(std::vector<bool>& vertecises_set)
+{
+	int count = 0;
+	for (bool vertex : vertecises_set)
+	{
+		if (vertex) count++;
+	}
+	return count;
+}
+
+bool A2Alg::findNeighbourVertex(std::vector<bool>& vertecises_set)
+{
+	int vertex_num = 0;
+	for (int i = 0; i < _matrix_size; i++)
+	{
+		if (vertecises_set[i])
+		{
+			vertex_num = i;
+		}
+	}
+
+	for (int j = 0; j < _matrix_size; j++)
+	{
+		if (_adjacency_matrix[vertex_num][j] == true)
+		{
+			vertecises_set[j] = true; // поместили вершину, у которой с рассматриваемой есть общее ребро
+			return true;
+		}
+	}
+	return false;
+}
+
+void A2Alg::addNeighbourVertexToKGraph(std::vector<bool>& vertecises_set, std::vector<std::vector<bool>>& k_graph)
+{
+	for (int i = 0; i < _matrix_size; i++)
+	{
+		if (!vertecises_set[i]) { continue; }
+
+		for (int j = 0; j < _matrix_size; j++)
+		{
+			if (!vertecises_set[i] || i==j) { continue; }
+			k_graph[i][j] = true;
+		}
+	}
+}
+
+void A2Alg::getRandomVertexIfPossible(std::vector<bool>& vertecises_set)
 {
 	std::mt19937 gen(1729);
 	std::uniform_real_distribution<> distr(0, _matrix_size);

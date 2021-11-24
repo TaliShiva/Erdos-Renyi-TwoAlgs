@@ -19,8 +19,9 @@ public:
 	      const std::vector<std::vector<bool>>& m_graph, const std::vector<std::vector<bool>>& k_graph);
 
 	void startCreateCluster(); // начинаем построение кластера - шаг 2 и 3 по сути
+	void supplementMGraph(std::vector<std::vector<bool>>& k_graph);
 
-	
+
 	int getNeighbourIndex(); // получаем номер соседней вершины
 
 
@@ -29,5 +30,9 @@ public:
 	int checkNeighbours(int& diameter, std::vector<int> vertices);
 private:
 	bool checkPossibleContinue(); // проверка матрицы на пустоту - условие выхода из алгоритма
+	int getClusterSize(std::vector<bool>& vertecises_set);
+	bool findNeighbourVertex(std::vector<bool>& vertecises_array);
+	void addNeighbourVertexToKGraph(std::vector<bool>& vertecises_set, std::vector<std::vector<bool>>& k_graph);
+	bool notEqual();
 	void getRandomVertexIfPossible(std::vector<bool>& vertecises_set);
 };
