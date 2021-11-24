@@ -1,5 +1,6 @@
 #include "A2Alg.h"
 
+#include <iterator>
 #include <random>
 
 
@@ -17,6 +18,8 @@ void A2Alg::startCreateCluster()
 {
 	std::vector<std::vector<bool>> k_graph{};
 	std::vector<bool> vertecises_array{}; // массив вершин, через который идёт заполнение k_graph-a
+	//
+	// TODO:его надо аллоцировать по количеству вершин
 	// проверяем, остались ли какие-то вершины, если нет то выходим из алгоритма
 	getRandomVertexIfPossible(vertecises_array); //выбор произвольной вершины и добавление её в _k_graph
 	while (checkPossibleContinue())
@@ -95,13 +98,27 @@ bool A2Alg::findNeighbourVertex(std::vector<bool>& vertecises_set)
 
 	for (int j = 0; j < _matrix_size; j++)
 	{
-		if (_adjacency_matrix[vertex_num][j] == true)
+		if (jVertexHasEdgesWithAllOtherVertexInKraph(j, vertecises_set))
 		{
 			vertecises_set[j] = true; // поместили вершину, у которой с рассматриваемой есть общее ребро
 			return true;
 		}
 	}
 	return false;
+}
+
+bool A2Alg::jVertexHasEdgesWithAllOtherVertexInKraph(int j, std::vector<bool>& vertecises_set)
+{
+	std::vector<int> vertex_nums_in_k_graph;
+	// копируем в массив номер вершин, только те, которые уже есть в рассмотрении
+	std::copy_if(vertecises_set.begin(), vertecises_set.end(), std::back_inserter(vertex_nums_in_k_graph), [](int i) {return i == true; });
+	for (int k_graph_vertex_num : vertex_nums_in_k_graph)
+	{
+		if (_adjacency_matrix[j][k_graph_vertex_num] != true)
+			return false;
+	}
+	// перебрали все вершина k-кластера
+	return true;
 }
 
 void A2Alg::addNeighbourVertexToKGraph(std::vector<bool>& vertecises_set, std::vector<std::vector<bool>>& k_graph)

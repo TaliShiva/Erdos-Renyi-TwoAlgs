@@ -32,6 +32,7 @@ private:
 	bool checkPossibleContinue(); // проверка матрицы на пустоту - условие выхода из алгоритма
 	int getClusterSize(std::vector<bool>& vertecises_set);
 	bool findNeighbourVertex(std::vector<bool>& vertecises_array);
+	bool jVertexHasEdgesWithAllOtherVertexInKraph(int j, std::vector<bool>& vertecises_set);
 	void addNeighbourVertexToKGraph(std::vector<bool>& vertecises_set, std::vector<std::vector<bool>>& k_graph);
 	bool notEqual();
 	void getRandomVertexIfPossible(std::vector<bool>& vertecises_set);
