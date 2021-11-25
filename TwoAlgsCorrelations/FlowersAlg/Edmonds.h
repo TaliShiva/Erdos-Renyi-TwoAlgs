@@ -141,12 +141,13 @@ public:
 			_match.push_back(false);
 		}
 
-		for (size_t i = 0; i < graph_size; i++)
+		/*for (size_t i = 0; i < graph_size; i++)
 		{
+			
 			if (_match[i] == false)
 			{
 				// если эта вершина ещё не помечена
-				/*auto neighbour : (*graph).GetNeighbours(i)#1#
+				auto neighbour : (*graph).GetNeighbours(i)#1#
 				for (size_t j = 0; j < (*graph).) // TODO: возможно кривое место, но вроде как нормальное
 				{
 					if (_match[neighbour] == false)
@@ -158,11 +159,11 @@ public:
 						_match[i] = _matches_matrix[i][neighbour]; //отмечаем вторую
 						break;
 					}
-				}*/
+				}
 			}
-		}
+		}*/
 	}
-}
+};
 
 
 	

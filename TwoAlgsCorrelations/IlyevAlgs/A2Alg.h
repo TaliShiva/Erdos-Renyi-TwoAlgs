@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <vector>
 
+#include "IGraph.h"
+
 // TODO: нужен тип для матриц, и тогда они все будут _adjacency_matrix  и я их буду уже специализировать
 
 class A2Alg
@@ -18,7 +20,10 @@ public:
 	A2Alg(const std::vector<std::vector<bool>>& adjacency_matrix, int matrix_size, int cluster_size,
 	      const std::vector<std::vector<bool>>& m_graph, const std::vector<std::vector<bool>>& k_graph);
 
+	A2Alg(const IGraphPtr& graph);
+
 	void startCreateCluster(); // начинаем построение кластера - шаг 2 и 3 по сути
+	void cutKGraphFromAdjMatrix(std::vector<std::vector<bool>>& k_graph, std::vector<bool> vertecises_array);
 	void supplementMGraph(std::vector<std::vector<bool>>& k_graph);
 
 
