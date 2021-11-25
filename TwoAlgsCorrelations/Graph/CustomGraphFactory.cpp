@@ -11,6 +11,7 @@ IGraphPtr CustomGraphFactory::CreateGraph(const unsigned size)
 	// 5 вершинный граф домик
 	adjacency_matrix[0][1] = true;
 	adjacency_matrix[0][4] = true;
+	adjacency_matrix[1][0] = true;
 	adjacency_matrix[1][2] = true;
 	adjacency_matrix[1][4] = true;
 	adjacency_matrix[2][1] = true;

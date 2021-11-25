@@ -27,6 +27,7 @@ int main(int argc,      // Number of strings in array argv
     cout << edmonds.ToJson();
     */
 
-    A2Alg a2 = A2Alg(newGraphPtr);
+    A2Alg a2 = A2Alg(newGraphPtr, 3);
+    a2.startCreateCluster();
     return 0;
 }

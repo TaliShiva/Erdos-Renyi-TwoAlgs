@@ -3,10 +3,10 @@
 RandomGraphFactory::RandomGraphFactory(const double density) : density_(density){}
 
 IGraphPtr RandomGraphFactory::CreateGraph(const unsigned size) {
-	std::vector<std::vector<int>> adjacency_matrix(size);
+	std::vector<std::vector<bool>> adjacency_matrix(size);
 	for (auto &row : adjacency_matrix)
 	{
-		row = std::vector<int>(size);
+		row = std::vector<bool>(size);
 	}
 
 	for (unsigned long i = 0; i < size; i++) {

@@ -20,7 +20,7 @@ public:
 	A2Alg(const std::vector<std::vector<bool>>& adjacency_matrix, int matrix_size, int cluster_size,
 	      const std::vector<std::vector<bool>>& m_graph, const std::vector<std::vector<bool>>& k_graph);
 
-	A2Alg(const IGraphPtr& graph);
+	A2Alg(const IGraphPtr& graph, int cluster_size);
 
 	void startCreateCluster(); // начинаем построение кластера - шаг 2 и 3 по сути
 	void cutKGraphFromAdjMatrix(std::vector<std::vector<bool>>& k_graph, std::vector<bool> vertecises_array);
@@ -37,6 +37,7 @@ private:
 	bool checkPossibleContinue(); // проверка матрицы на пустоту - условие выхода из алгоритма
 	int getClusterSize(std::vector<bool>& vertecises_set);
 	bool findNeighbourVertex(std::vector<bool>& vertecises_array);
+	void getVectorVerNumsInKGraph(std::vector<bool>& vertecises_set, std::vector<int>& vertex_nums_in_k_graph);
 	bool jVertexHasEdgesWithAllOtherVertexInKraph(int j, std::vector<bool>& vertecises_set);
 	void addNeighbourVertexToKGraph(std::vector<bool>& vertecises_set, std::vector<std::vector<bool>>& k_graph);
 	bool notEqual();
