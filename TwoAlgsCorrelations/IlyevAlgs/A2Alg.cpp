@@ -1,6 +1,8 @@
 #include "A2Alg.h"
 
+#include <iostream>
 #include <iterator>
+#include <ostream>
 #include <random>
 
 A2Alg::A2Alg(const std::vector<std::vector<bool>>& adjacency_matrix, int matrix_size, int cluster_size,
@@ -23,10 +25,11 @@ A2Alg::A2Alg(const IGraphPtr& graph, int cluster_size)
 	_k_graph = blank;
 }
 
-void A2Alg::startCreateCluster()
+void A2Alg::CreateMGraph()
 {
 	std::vector<std::vector<bool>> k_graph(_matrix_size);
 	std::vector<bool> vertecises_array(_matrix_size); // массив вершин, через который идёт заполнение k_graph-a
+	MatrixWriter* mw = new MatrixWriter();
 	for (auto& row : k_graph)
 	{
 		row = std::vector<bool>(_matrix_size, false);
@@ -37,9 +40,14 @@ void A2Alg::startCreateCluster()
 	// TODO: массивы надо аллоцировать по количеству вершин
 	// проверяем, остались ли какие-то вершины, если нет то выходим из алгоритма
 	getRandomVertexIfPossible(vertecises_array); //выбор произвольной вершины и добавление её в _k_graph
-	while (checkPossibleContinue())
+	while (checkPossibleContinue()) //TODO: условие поправить
 	{
-		if (getClusterSize(vertecises_array) <= _cluster_size) // проверяем  |K_i| < p  
+	/*	std::cout << (*mw).ToJson(k_graph, "k_graph_at_start_iteration");
+		std::cout << (*mw).ToJson(_m_graph, "m_graph_at_start_iteration");
+		std::cout << (*mw).ToJson(_adjacency_matrix, "_adjacency_matrix_at_start_iteration");
+	*/
+		
+		while (getClusterSize(vertecises_array) <= _cluster_size) // проверяем  |K_i| < p  
 		{
 			if (findNeighbourVertex(vertecises_array)) // ищем подходящих соседей
 			{
@@ -48,23 +56,42 @@ void A2Alg::startCreateCluster()
 			else
 			{
 				// нет подходящих соседей
+				break;
 			}
+			//std::cout << (*mw).ToJson(k_graph, "k_graph_in_clustering");
 		}
 		supplementMGraph(k_graph); //пополняем m graph
 		cutKGraphFromAdjMatrix(k_graph, vertecises_array); // аккуратно удаляем i-й кластер
 	}
+	
 }
 
-void A2Alg::cutKGraphFromAdjMatrix(std::vector<std::vector<bool>>& k_graph, std::vector<bool> vertecises_array)
+void A2Alg::cutKGraphFromAdjMatrix(std::vector<std::vector<bool>>& k_graph, std::vector<bool>& vertecises_set)
 {
 	std::vector<int> vertex_nums_in_k_graph;
 	// копируем в массив номер вершин, только те, которые уже есть в рассмотрении
-	std::copy_if(vertecises_array.begin(), vertecises_array.end(), std::back_inserter(vertex_nums_in_k_graph),
-	             [](int i) { return i == true; });
+
+	getVectorVerNumsInKGraph(vertecises_set, vertex_nums_in_k_graph);
+
+
+	//TODO: сделал дегенеративное решение, чтобы вырезать столбцы и строки, но ничего не могу поделать
+	for (int i = 0; i < _matrix_size; i++)
+	{
+		for (int j = 0; j < _matrix_size; j++)
+		{
+			if (std::find(vertex_nums_in_k_graph.begin(), vertex_nums_in_k_graph.end(), j) != vertex_nums_in_k_graph.
+				end())
+			{
+				k_graph[i][j] = false;
+				_adjacency_matrix[i][j] = false;
+			}
+		}
+	}
 
 	for (int i = 0; i < _matrix_size; i++)
 	{
-		if (std::find(vertex_nums_in_k_graph.begin(), vertex_nums_in_k_graph.end(), i) != vertex_nums_in_k_graph.end())
+		if (std::find(vertex_nums_in_k_graph.begin(), vertex_nums_in_k_graph.end(), i) != vertex_nums_in_k_graph.
+			end())
 		{
 			for (int j = 0; j < _matrix_size; j++)
 			{
@@ -73,9 +100,10 @@ void A2Alg::cutKGraphFromAdjMatrix(std::vector<std::vector<bool>>& k_graph, std:
 			}
 		}
 	}
+
 	for (int i = 0; i < _matrix_size; i++)
 	{
-		vertecises_array[i] = false;
+		vertecises_set[i] = false;
 	}
 }
 
@@ -91,9 +119,14 @@ void A2Alg::supplementMGraph(std::vector<std::vector<bool>>& k_graph)
 	}
 }
 
+std::vector<std::vector<bool>> A2Alg::GetCopyOfMGraph() const
+{
+	return _m_graph;
+}
+
 
 /// <summary>
-/// Проверяем матрицу на возможность работы с ней, 
+/// Проверяем матрицу на возможность работы с ней, суть такая, что в этой матрице не должно быть не отсмотренных рёбер
 /// </summary>
 /// <returns> true если с этим алгоритмом ещё можно работать</returns>
 bool A2Alg::checkPossibleContinue()
@@ -106,6 +139,7 @@ bool A2Alg::checkPossibleContinue()
 				return true;
 		}
 	}
+	return false;
 }
 
 /// <summary>
@@ -171,7 +205,11 @@ bool A2Alg::jVertexHasEdgesWithAllOtherVertexInKraph(int j, std::vector<bool>& v
 	return true;
 }
 
-//TODO: Тут ошибка
+/// <summary>
+/// Добавляем вершины в k_graph, выпуская из прохода по матрице строки и столбцы, которые не отмечены как использованные в графе
+/// </summary>
+/// <param name="vertecises_set"></param>
+/// <param name="k_graph"></param>
 void A2Alg::addNeighbourVertexToKGraph(std::vector<bool>& vertecises_set, std::vector<std::vector<bool>>& k_graph)
 {
 	for (int i = 0; i < _matrix_size; i++)
@@ -180,7 +218,7 @@ void A2Alg::addNeighbourVertexToKGraph(std::vector<bool>& vertecises_set, std::v
 
 		for (int j = 0; j < _matrix_size; j++)
 		{
-			if (!vertecises_set[i] || i == j) { continue; }
+			if (!vertecises_set[j] || i == j) { continue; }
 			k_graph[i][j] = true;
 		}
 	}
@@ -192,7 +230,6 @@ void A2Alg::getRandomVertexIfPossible(std::vector<bool>& vertecises_set)
 	std::uniform_real_distribution<> distr(0, _matrix_size);
 	vertecises_set[distr(gen)] = true;
 }
-
 
 /*
 bool isPossibleClusterGraph()

@@ -17,8 +17,6 @@ public:
 	/// </summary>
 	virtual unsigned Size() const = 0;
 
-	virtual std::string ToJson() const = 0;
-
 	virtual std::vector<short> GetNeighbours(short i) = 0;
 
 	virtual int GetRoot() const = 0;

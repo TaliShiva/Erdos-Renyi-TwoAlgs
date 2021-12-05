@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "IGraph.h"
+#include "../Common/MatrixWriter.h"
 
 // TODO: нужен тип для матриц, и тогда они все будут _adjacency_matrix  и я их буду уже специализировать
 
@@ -22,14 +23,14 @@ public:
 
 	A2Alg(const IGraphPtr& graph, int cluster_size);
 
-	void startCreateCluster(); // начинаем построение кластера - шаг 2 и 3 по сути
-	void cutKGraphFromAdjMatrix(std::vector<std::vector<bool>>& k_graph, std::vector<bool> vertecises_array);
+	void CreateMGraph(); // начинаем построение кластера - шаг 2 и 3 по сути
+	void cutKGraphFromAdjMatrix(std::vector<std::vector<bool>>& k_graph, std::vector<bool>& vertecises_array);
 	void supplementMGraph(std::vector<std::vector<bool>>& k_graph);
 
 
 	int getNeighbourIndex(); // получаем номер соседней вершины
 
-
+	std::vector<std::vector<bool>> GetCopyOfMGraph() const;
 	bool isPossibleClusterGraph();
 
 	int checkNeighbours(int& diameter, std::vector<int> vertices);

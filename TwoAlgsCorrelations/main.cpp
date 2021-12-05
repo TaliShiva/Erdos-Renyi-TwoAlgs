@@ -3,6 +3,7 @@
 #include "Graph.h"
 #include "RandomGraphFactory.h"
 #include "CustomGraphFactory.h"
+#include "Common/MatrixWriter.h"
 #include "FlowersAlg/Edmonds.h"
 #include "IlyevAlgs/A2Alg.h"
 
@@ -18,16 +19,17 @@ int main(int argc,      // Number of strings in array argv
     auto graphPtr = graph_factory.CreateGraph(graph_size);
     cout << (*graphPtr).ToJson();
     */
-   
+    MatrixWriter* mw = new MatrixWriter();
     CustomGraphFactory c_graph_factory = CustomGraphFactory();
     auto newGraphPtr = c_graph_factory.CreateGraph(graph_size);
-    cout << (*newGraphPtr).ToJson();
+    cout << (*mw).ToJson((*newGraphPtr).GetCopyOfAdjacencyMatrix(),"Start Graph");
 
 	/*edmonds.PreliminaryGreedyMatchBuilding(newGraphPtr);
     cout << edmonds.ToJson();
     */
 
     A2Alg a2 = A2Alg(newGraphPtr, 3);
-    a2.startCreateCluster();
+    a2.CreateMGraph();
+    cout << (*mw).ToJson(a2.GetCopyOfMGraph(), "MGraph");
     return 0;
 }

@@ -16,8 +16,6 @@ public:
 
 	std::vector<short> GetNeighbours(short i) override;
 
-	std::string ToJson() const override;
-
 	std::vector<std::vector<bool>> GetCopyOfAdjacencyMatrix() const;
 
 	int GetRoot() const override;

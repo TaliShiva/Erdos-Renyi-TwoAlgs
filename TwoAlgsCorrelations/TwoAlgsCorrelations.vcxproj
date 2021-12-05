@@ -149,6 +149,7 @@
     <ClCompile Include="Graph\RandomGraphFactory.cpp" />
     <ClCompile Include="Graph\RandomGraphFactory.h" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Common\MatrixWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IlyevAlgs\A2Alg.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Graph\CustomGraphFactory.h" />
     <ClInclude Include="Graph\IGraph.h" />
     <ClInclude Include="Graph\IGraphFactory.h" />
+    <ClInclude Include="Common\MatrixWriter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
