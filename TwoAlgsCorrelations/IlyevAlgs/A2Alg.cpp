@@ -39,14 +39,13 @@ void A2Alg::CreateMGraph()
 	//
 	// TODO: массивы надо аллоцировать по количеству вершин
 	// провер€ем, остались ли какие-то вершины, если нет то выходим из алгоритма
-	getRandomVertexIfPossible(vertecises_array); //выбор произвольной вершины и добавление еЄ в _k_graph
+
 	while (checkPossibleContinue()) //TODO: условие поправить
 	{
-	/*	std::cout << (*mw).ToJson(k_graph, "k_graph_at_start_iteration");
 		std::cout << (*mw).ToJson(_m_graph, "m_graph_at_start_iteration");
 		std::cout << (*mw).ToJson(_adjacency_matrix, "_adjacency_matrix_at_start_iteration");
-	*/
-		
+
+		getNotPointedVertexIfPossible(vertecises_array);
 		while (getClusterSize(vertecises_array) <= _cluster_size) // провер€ем  |K_i| < p  
 		{
 			if (findNeighbourVertex(vertecises_array)) // ищем подход€щих соседей
@@ -58,12 +57,10 @@ void A2Alg::CreateMGraph()
 				// нет подход€щих соседей
 				break;
 			}
-			//std::cout << (*mw).ToJson(k_graph, "k_graph_in_clustering");
 		}
 		supplementMGraph(k_graph); //пополн€ем m graph
 		cutKGraphFromAdjMatrix(k_graph, vertecises_array); // аккуратно удал€ем i-й кластер
 	}
-	
 }
 
 void A2Alg::cutKGraphFromAdjMatrix(std::vector<std::vector<bool>>& k_graph, std::vector<bool>& vertecises_set)
@@ -103,6 +100,7 @@ void A2Alg::cutKGraphFromAdjMatrix(std::vector<std::vector<bool>>& k_graph, std:
 
 	for (int i = 0; i < _matrix_size; i++)
 	{
+		if (vertecises_set[i]) { std::cout << i; }
 		vertecises_set[i] = false;
 	}
 }
@@ -230,6 +228,21 @@ void A2Alg::getRandomVertexIfPossible(std::vector<bool>& vertecises_set)
 	std::uniform_real_distribution<> distr(0, _matrix_size);
 	vertecises_set[distr(gen)] = true;
 }
+
+void A2Alg::getNotPointedVertexIfPossible(std::vector<bool>& vertecises_set)
+{
+	for (int i = 0; i < _matrix_size; i++)
+	{
+		for (int j = 0; j < _matrix_size; j++)
+		{
+			if (_adjacency_matrix[i][j]) {
+				vertecises_set[i] = true;
+				return; 
+			}
+		}
+	}
+}
+
 
 /*
 bool isPossibleClusterGraph()

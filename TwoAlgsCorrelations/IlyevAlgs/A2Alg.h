@@ -43,4 +43,5 @@ private:
 	void addNeighbourVertexToKGraph(std::vector<bool>& vertecises_set, std::vector<std::vector<bool>>& k_graph);
 	bool notEqual();
 	void getRandomVertexIfPossible(std::vector<bool>& vertecises_set);
+	void getNotPointedVertexIfPossible(std::vector<bool>& vertecises_set);
 };
