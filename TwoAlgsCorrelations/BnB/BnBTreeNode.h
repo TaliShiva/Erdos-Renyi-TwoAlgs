@@ -166,7 +166,7 @@ public:
 		}
 	}
 
-	int check_neighbours(int& diameter, std::vector<int> vertices)
+	int check_neighbours(int& diameter, std::vector<int>& vertices)
 	{
 		std::vector<int> new_neighbours{};
 		for (int vertex : vertices)
