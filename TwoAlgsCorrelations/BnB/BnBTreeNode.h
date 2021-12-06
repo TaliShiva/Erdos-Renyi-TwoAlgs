@@ -3,6 +3,7 @@
 
 #include "BnB.h"
 #include "IGraph.h"
+#include "MatrixCoordinate.h"
 
 /// <summary>
 	/// Класс, для хранения состояния графа в ноде дерева рассчётов
@@ -13,25 +14,32 @@ class CalculatedTreeNode
 	std::vector<std::vector<bool>> _current_node_marked_matrix{};
 	int _best_distance = 0;
 	int _current_distance = 0;
-	int _size = 0;
-
+	int _matrix_size = 0;
+public:
 	CalculatedTreeNode(int size)
 	{
 		for (int i = 0; i < size; i++)
 		{
-			_current_node_adjacency_matrix.push_back(std::vector<bool>(size));
-			_current_node_marked_matrix.push_back(std::vector<bool>(size));
+			_current_node_adjacency_matrix.emplace_back(size);
+			_current_node_marked_matrix.emplace_back(size);
 		}
 		_best_distance = 0;
 		_current_distance = 0;
-		_size = size;
+		_matrix_size = size;
+	}
+
+	CalculatedTreeNode(std::vector<std::vector<bool>>& _adjacency_matrix, std::vector<std::vector<bool>>& _marked_edges_ajacency_matrix, int matrix_size) :
+		_current_node_adjacency_matrix(_adjacency_matrix),
+		_current_node_marked_matrix(_marked_edges_ajacency_matrix),
+		_matrix_size(matrix_size)
+	{
 	}
 
 	CalculatedTreeNode(CalculatedTreeNode& treeNode, int bestDistance) :
 		_current_node_adjacency_matrix(treeNode._current_node_adjacency_matrix),
 		_current_node_marked_matrix(treeNode._current_node_marked_matrix),
 		_best_distance(bestDistance),
-		_size(treeNode._size),
+		_matrix_size(treeNode._matrix_size),
 		_current_distance(treeNode._current_distance)
 	{
 	}
@@ -66,9 +74,9 @@ class CalculatedTreeNode
 	/// <returns></returns>
 	bool checkEmptySubGraph()
 	{
-		for (int i = 0; i < _size; ++i)
+		for (int i = 0; i < _matrix_size; ++i)
 		{
-			for (int j = i; j < _size; ++j)
+			for (int j = i; j < _matrix_size; ++j)
 			{
 				if (_current_node_adjacency_matrix[i][j] == true)
 				{
@@ -86,9 +94,9 @@ class CalculatedTreeNode
 	/// <returns> true - если все ребра совпали, false в обратном случае </returns>
 	bool checkFullMarking()
 	{
-		for (int i = 0; i < _size; ++i)
+		for (int i = 0; i < _matrix_size; ++i)
 		{
-			for (int j = i; j < _size; ++j)
+			for (int j = i; j < _matrix_size; ++j)
 			{
 				if (_current_node_adjacency_matrix[i][j] != _current_node_marked_matrix[i][j])
 				{
@@ -100,15 +108,12 @@ class CalculatedTreeNode
 	}
 
 
-	bool isPossibleClusterGraph()
+	bool checkClawGraph(bool& value)
 	{
-		//TODO: является маркированный граф, точками, парами,треугольниками или двумя связанными парами
-		//TODO: либо через запрещённые пойти, есть ли тут треугольники с соплями, три связанных ребра, если то - то плохо
-
-		for (int i = 0; i < _size; ++i)
+		for (int i = 0; i < _matrix_size; ++i)
 		{
 			int count_of_marked_edges = 0; // переменная, необходимая для исключения claw-графов
-			for (int j = 0; j < _size; ++j)
+			for (int j = 0; j < _matrix_size; ++j)
 			{
 				if (_current_node_marked_matrix[i][j] == true)
 				{
@@ -116,17 +121,28 @@ class CalculatedTreeNode
 				}
 				if (count_of_marked_edges >= 3)
 				{
-					return false; // нашли подграф, в котором есть клешня, а это невозможный случай
+					value = false;
+					return true; // нашли подграф, в котором есть клешня, а это невозможный случай
 				}
 			}
 		}
+		return false;
+	}
+
+	bool isPossibleClusterGraph()
+	{
+		//TODO: является маркированный граф, точками, парами,треугольниками или двумя связанными парами
+		//TODO: либо через запрещённые пойти, есть ли тут треугольники с соплями, три связанных ребра, если есть - то плохо
+
+		bool value;
+		if (checkClawGraph(value)) return value;
 
 		// Нужен обход в ширину по матрице смежности, с поиском диаметра
-		for (int i = 0; i < _size; ++i)
+		for (int i = 0; i < _matrix_size; ++i)
 		{
 			int diameter = 0; // переменная, необходимая для подсчёта диаметрка
 			std::vector<int> vertices{};
-			for (int j = i; j < _size; ++j)
+			for (int j = i; j < _matrix_size; ++j)
 			{
 				if (_current_node_marked_matrix[i][j] == true)
 				{
@@ -155,7 +171,7 @@ class CalculatedTreeNode
 		std::vector<int> new_neighbours{};
 		for (int vertex : vertices)
 		{
-			for (int j = 0; j < _size; ++j)
+			for (int j = 0; j < _matrix_size; ++j)
 			{
 				if (_current_node_marked_matrix[vertex][j] == true)
 				{
@@ -178,6 +194,7 @@ class CalculatedTreeNode
 	void markEdge(MatrixCoordinate matrix_coordinate)
 	{
 		_current_node_marked_matrix[matrix_coordinate.i][matrix_coordinate.j] = true;
+		_current_node_marked_matrix[matrix_coordinate.j][matrix_coordinate.i] = true;
 	}
 
 	void incCurDistance()

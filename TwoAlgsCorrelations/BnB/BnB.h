@@ -1,13 +1,9 @@
 ﻿#pragma once
 #include <functional>
-
+#include <string>
 #include "BnBTreeNode.h"
+#include "MatrixCoordinate.h"
 
-struct MatrixCoordinate
-{
-	int i;
-	int j;
-};
 
 /// <summary>
 /// Класс для рассчёта кластеров в графах, с размером кластера не больше трёх 
@@ -18,44 +14,52 @@ class BranchAndBounds
 	std::vector<std::vector<bool>> _adjacency_matrix{};
 	int _matrix_size = 0;
 	int _general_best_distance = INT_MAX;
-
+public:
 	BranchAndBounds(int size, const IGraphPtr& graph)
 	{
 		_adjacency_matrix = (*graph).GetCopyOfAdjacencyMatrix();
 		_matrix_size = size;
 		_general_best_distance = INT_MAX;
-		for (int i = 0; i < size; i++)
-		{
-			_current_node_matches_matrix.push_back(std::vector<bool>(size));
-		}
+		std::vector<std::vector<bool>> blank(_matrix_size, std::vector<bool>(_matrix_size));
+		_marked_edges_ajacency_matrix = blank;
 	}
 
+	void startCalclulating()
+	{
+		CalculatedTreeNode startTreeNode = CalculatedTreeNode(_adjacency_matrix, _marked_edges_ajacency_matrix,
+		                                                      _matrix_size);
+		CalculateTree(startTreeNode);
+	}
 
+	/// <summary>
 	/// Рекурсивный спуск по дереву к листьям алгоритма ветвей и границ
-	///
 	/// по симуляции мы передаём внутрь текущую ноду симуляции
-	/// Возвращаем число обозначающее лучшее расстоения из ноды 
+	/// Возвращаем число обозначающее лучшее расстоения из ноды
+	/// </summary>
+	/// <param name="treeNode"></param>
+	/// <returns></returns>
 	int CalculateTree(CalculatedTreeNode& treeNode)
 	{
-		if(_general_best_distance < (*treeNode).getCurrentDistance())
+		if (_general_best_distance < (treeNode).getCurrentDistance())
 		{
 			return _general_best_distance;
 		}
 
-		if ((*treeNode).checkEmpty()) // получился пустой граф 
+		if (treeNode.checkEmptySubGraph()) // получился пустой граф 
 		{
 			return _general_best_distance; // по идее не должны сюда попадать 
 		}
 
-		if (!(*treeNode).isPossibleClusterGraph()) // Проверка ситуаций, в допустимую ноду дерева мы попали или нет, может ли быть такой граф
+		if (!treeNode.isPossibleClusterGraph())
+			// Проверка ситуаций, в допустимую ноду дерева мы попали или нет, может ли быть такой граф
 		{
 			return _general_best_distance;
 		}
 
-		if ((*treeNode).checkFullMarking()) // если это уже полностью размеченный граф 
+		if (treeNode.checkFullMarking()) // если это уже полностью размеченный граф 
 		{
 			//Todo: добавить в список решений этот граф 
-			auto current_distance = (*treeNode).getCurrentDistance();
+			auto current_distance = treeNode.getCurrentDistance();
 			_general_best_distance = current_distance;
 			return current_distance; // Âîò îíî ðåøåíèå
 		}
@@ -64,7 +68,8 @@ class BranchAndBounds
 		// иначе делим на две ветки, где по одной ветке маркируется выбранное ребро, а в другой ветке оно удаляется из графа,
 		// проверка маркированной матрицы, по идее, включает в себя как от просмотр маркированной матрицы, а удаление ребра увеличивает дистанцию 
 
-		MatrixCoordinate next_edge = GetNextEdge(); // получаем следующее ребро, которое будет маркировано, либо удалено 
+		MatrixCoordinate next_edge = GetNextEdge();
+		// получаем следующее ребро, которое будет маркировано, либо удалено 
 
 		// сперва проведём симуляцию по ветке с маркировкой рёбер 
 		CalculatedTreeNode calculate_marked_tree_node_copy = CalculatedTreeNode(treeNode, _general_best_distance);
@@ -105,7 +110,7 @@ class BranchAndBounds
 			{
 				if (unmarked_adjacency_matrix[i][j] != false)
 				{
-					MatrixCoordinate matrix_coordinate{i, j};
+					const MatrixCoordinate matrix_coordinate{i, j};
 					return matrix_coordinate;
 				}
 			}

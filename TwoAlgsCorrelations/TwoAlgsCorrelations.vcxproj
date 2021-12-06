@@ -152,6 +152,7 @@
     <ClCompile Include="Common\MatrixWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BnB\MatrixCoordinate.h" />
     <ClInclude Include="IlyevAlgs\A2Alg.h" />
     <ClInclude Include="BnB\BnB.h" />
     <ClInclude Include="BnB\BnBTreeNode.h" />
