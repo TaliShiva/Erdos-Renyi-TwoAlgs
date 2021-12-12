@@ -129,6 +129,8 @@ public:
 		return false;
 	}
 
+
+
 	bool isPossibleClusterGraph()
 	{
 		//TODO: является маркированный граф, точками, парами,треугольниками или двумя связанными парами
@@ -138,10 +140,11 @@ public:
 		if (checkClawGraph(value)) return value;
 
 		// Нужен обход в ширину по матрице смежности, с поиском диаметра
+
+		int diameter = -1; // переменная, необходимая для подсчёта диаметра,начинается с -1, так как встретив первую вершину диаметр = 0
+		std::vector<int> vertices{};// складываем номера вершин в графе, которые получается в этой вершине дерева
 		for (int i = 0; i < _matrix_size; ++i)
 		{
-			int diameter = 0; // переменная, необходимая для подсчёта диаметрка
-			std::vector<int> vertices{};
 			for (int j = i; j < _matrix_size; ++j)
 			{
 				if (_current_node_marked_matrix[i][j] == true)
@@ -150,18 +153,14 @@ public:
 					vertices.push_back(j);
 				}
 			}
+		}
 
-			if (vertices.empty())
+		if (!vertices.empty())
+		{
+			check_neighbours(diameter, vertices);
+			if (diameter >= 3)
 			{
-				continue;
-			}
-			else
-			{
-				check_neighbours(diameter, vertices);
-				if(diameter>=3)
-				{
-					return false; // нашли цепь длины 3 или больше
-				}
+				return false; // нашли цепь длины 3 или больше
 			}
 		}
 	}

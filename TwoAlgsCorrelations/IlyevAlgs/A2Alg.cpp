@@ -157,15 +157,7 @@ int A2Alg::getClusterSize(std::vector<bool>& vertecises_set)
 
 bool A2Alg::findNeighbourVertex(std::vector<bool>& vertecises_set)
 {
-	/*	int vertex_num = 0;
-		for (int i = 0; i < _matrix_size; i++)
-		{
-			if (vertecises_set[i])
-			{
-				vertex_num = i;
-			}
-		}
-	*/
+
 	for (int j = 0; j < _matrix_size; j++)
 	{
 		if (jVertexHasEdgesWithAllOtherVertexInKraph(j, vertecises_set))
