@@ -9,7 +9,7 @@ IGraphPtr CustomGraphFactory::CreateGraph(const unsigned size)
 		row = std::vector<bool>(size, false);
 	}
 	// 5 вершинный граф домик
-	adjacency_matrix[0][1] = true;
+	/*adjacency_matrix[0][1] = true;
 	adjacency_matrix[0][4] = true;
 	adjacency_matrix[1][0] = true;
 	adjacency_matrix[1][2] = true;
@@ -20,10 +20,9 @@ IGraphPtr CustomGraphFactory::CreateGraph(const unsigned size)
 	adjacency_matrix[3][4] = true;
 	adjacency_matrix[4][0] = true;
 	adjacency_matrix[4][1] = true;
-	adjacency_matrix[4][3] = true;
+	adjacency_matrix[4][3] = true;*/
 
 	// квадрат и цепочка из двух звеньев
-	/*
 	adjacency_matrix[0][3] = true;
 	adjacency_matrix[0][4] = true;
 	adjacency_matrix[1][3] = true;
@@ -37,7 +36,6 @@ IGraphPtr CustomGraphFactory::CreateGraph(const unsigned size)
 	adjacency_matrix[4][1] = true;
 	adjacency_matrix[5][1] = true;
 	adjacency_matrix[5][2] = true;
-	*/
 
 		/*adjacency_matrix[0][2] = true;
 		adjacency_matrix[0][3] = true;

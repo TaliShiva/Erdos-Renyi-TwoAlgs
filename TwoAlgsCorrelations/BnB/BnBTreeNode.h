@@ -1,4 +1,6 @@
 #pragma once
+#include <list>
+#include <set>
 #include <vector>
 
 #include "BnB.h"
@@ -10,12 +12,13 @@
 	/// </summary>
 class CalculatedTreeNode
 {
-	std::vector<std::vector<bool>> _current_node_adjacency_matrix{};
-	std::vector<std::vector<bool>> _current_node_marked_matrix{};
 	int _best_distance = 0;
 	int _current_distance = 0;
 	int _matrix_size = 0;
 public:
+	std::vector<std::vector<bool>> _current_node_adjacency_matrix{};
+	std::vector<std::vector<bool>> _current_node_marked_matrix{};
+
 	CalculatedTreeNode(int size)
 	{
 		for (int i = 0; i < size; i++)
@@ -28,7 +31,8 @@ public:
 		_matrix_size = size;
 	}
 
-	CalculatedTreeNode(std::vector<std::vector<bool>>& _adjacency_matrix, std::vector<std::vector<bool>>& _marked_edges_ajacency_matrix, int matrix_size) :
+	CalculatedTreeNode(std::vector<std::vector<bool>>& _adjacency_matrix,
+	                   std::vector<std::vector<bool>>& _marked_edges_ajacency_matrix, int matrix_size) :
 		_current_node_adjacency_matrix(_adjacency_matrix),
 		_current_node_marked_matrix(_marked_edges_ajacency_matrix),
 		_matrix_size(matrix_size)
@@ -107,84 +111,86 @@ public:
 		return true;
 	}
 
-
-	bool checkClawGraph(bool& value)
+	bool isPossibleClusterGraph(bool isResultedGraph)
 	{
+		// копируем в массив номер вершин, только те, которые уже есть в рассмотрении
+
+		std::set<int> checked_vertesises{};
 		for (int i = 0; i < _matrix_size; ++i)
 		{
-			int count_of_marked_edges = 0; // переменная, необходимая для исключения claw-графов
-			for (int j = 0; j < _matrix_size; ++j)
-			{
-				if (_current_node_marked_matrix[i][j] == true)
-				{
-					count_of_marked_edges++;
-				}
-				if (count_of_marked_edges >= 3)
-				{
-					value = false;
-					return true; // нашли подграф, в котором есть клешня, а это невозможный случай
-				}
-			}
-		}
-		return false;
-	}
-
-
-
-	bool isPossibleClusterGraph()
-	{
-		//TODO: является маркированный граф, точками, парами,треугольниками или двумя связанными парами
-		//TODO: либо через запрещённые пойти, есть ли тут треугольники с соплями, три связанных ребра, если есть - то плохо
-
-		bool value;
-		if (checkClawGraph(value)) return value;
-
-		// Нужен обход в ширину по матрице смежности, с поиском диаметра
-
-		int diameter = -1; // переменная, необходимая для подсчёта диаметра,начинается с -1, так как встретив первую вершину диаметр = 0
-		std::vector<int> vertices{};// складываем номера вершин в графе, которые получается в этой вершине дерева
-		for (int i = 0; i < _matrix_size; ++i)
-		{
+			if (checked_vertesises.find(i) != checked_vertesises.end()) continue;
 			for (int j = i; j < _matrix_size; ++j)
 			{
-				if (_current_node_marked_matrix[i][j] == true)
+				if (checked_vertesises.find(j) != checked_vertesises.end()) continue;
+				if (_current_node_marked_matrix[i][j])
 				{
-					diameter++;
-					vertices.push_back(j);
+					if (!is_cluster(checked_vertesises, i, isResultedGraph)) return false;
+					//если рассмотренный маркированный подграф невозможен выходим
 				}
 			}
 		}
 
-		if (!vertices.empty())
-		{
-			check_neighbours(diameter, vertices);
-			if (diameter >= 3)
-			{
-				return false; // нашли цепь длины 3 или больше
-			}
-		}
+		return true;
 	}
 
-	int check_neighbours(int& diameter, std::vector<int>& vertices)
+	bool is_cluster(std::set<int>& checked_vertesises, int i, bool isResultedGraph)
 	{
-		std::vector<int> new_neighbours{};
-		for (int vertex : vertices)
+		// сперва получаем список связанных вершин
+		std::set<int> visited{};
+		std::set<int> neighbours{};
+		visited.insert(i);
+		for (int j = 0; j < _matrix_size; j++)
 		{
-			for (int j = 0; j < _matrix_size; ++j)
+			if (_current_node_marked_matrix[i][j] == true)
 			{
-				if (_current_node_marked_matrix[vertex][j] == true)
-				{
-					diameter++;
-					new_neighbours.push_back(j);
-				}
+				neighbours.insert(j);
 			}
 		}
-		//TODO: скипать j-шку отсмотренную
+		// прошла первая итерация
 
-		if (!vertices.empty())
-			check_neighbours(diameter, new_neighbours);
+		while (!neighbours.empty())
+		{
+			int neighbour = *neighbours.begin();
+			visited.insert(neighbour);
+			for (int j = 0; j < _matrix_size; j++)
+			{
+				if (visited.find(j) != visited.end()) continue;
+				if (_current_node_marked_matrix[neighbour][j] == true)
+				{
+					neighbours.insert(j);
+				}
+			}
+			neighbours.erase(neighbour);
+		}
+		// на этом моменте у нас типо есть множество вершин
 
-		return diameter;
+		// Проверяем количество вершин, если оно меньше размера предполагаемого кластера - то всё ок, помещаем в массив потенциальных клик и выходим
+		if (!isResultedGraph)
+		{
+			if (visited.size() <= 3)
+				return true; // пока что возможен
+		}
+		// Потом, проверяем по этому списку получается ли клика какого-то размера или нет
+		for (int vertex_num : visited)
+			if (!VertexHasEdgesWithAllOtherVertexInCluster(vertex_num, visited))
+			{
+				return false;
+			}
+		// не забыть поместим в checked_vertex нужные вершин
+		checked_vertesises = visited;
+		return true;
+	}
+
+	bool VertexHasEdgesWithAllOtherVertexInCluster(int j, std::set<int>& vertecises_set)
+	{
+		for (int vertex_num : vertecises_set)
+		{
+			if (vertex_num == j) continue;
+			if (_current_node_marked_matrix[j][vertex_num] != true)
+				return false;
+		}
+		// перебрали все вершина k-кластера
+		return true;
 	}
 
 	/// <summary>
@@ -204,6 +210,7 @@ public:
 	void rejectEdge(MatrixCoordinate matrix_coordinate)
 	{
 		_current_node_adjacency_matrix[matrix_coordinate.i][matrix_coordinate.j] = false;
+		_current_node_adjacency_matrix[matrix_coordinate.j][matrix_coordinate.i] = false;
 	}
 
 	bool isMayBeTriangle(const int i_1, const int j_1, const int i_2, const int j_2)
