@@ -161,6 +161,7 @@
     <ClInclude Include="Graph\IGraph.h" />
     <ClInclude Include="Graph\IGraphFactory.h" />
     <ClInclude Include="Common\MatrixWriter.h" />
+    <ClInclude Include="Tests\CustomTests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

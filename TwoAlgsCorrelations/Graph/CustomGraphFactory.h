@@ -3,8 +3,14 @@
 
 #include "Graph.h"
 #include "IGraphFactory.h"
-class CustomGraphFactory : IGraphFactory
+
+class CustomGraphFactory
 {
-	public:
-		IGraphPtr CreateGraph(const unsigned size) override;
+private:
+	static void adjMatrixInit(int size, std::vector<std::vector<bool>>& adjacency_matrix);
+public:
+	static IGraphPtr CreateHouseGraph();
+	static IGraphPtr CreateSquareWithShortChain();
+	static IGraphPtr CreateDiamondGraph();
+	static int GetGraphSize();
 };

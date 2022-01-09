@@ -45,5 +45,6 @@
     <ClInclude Include="IlyevAlgs\A2Alg.h" />
     <ClInclude Include="Common\MatrixWriter.h" />
     <ClInclude Include="BnB\MatrixCoordinate.h" />
+    <ClInclude Include="Tests\CustomTests.h" />
   </ItemGroup>
 </Project>
