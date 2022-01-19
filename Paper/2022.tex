@@ -1,0 +1,57 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage{mathtext}
+\usepackage{amsmath} % необходим, чтобы в многострочных формулах делать переносы формул
+\usepackage{amsthm,amssymb}
+\usepackage{amsfonts} % необходим для R 
+\usepackage{setspace}
+\onehalfspacing
+
+\newenvironment{comment}{}{}
+\newtheorem{theorem}{\hspace{1cm}Theorem}
+\newtheorem{lemma}{\hspace{1cm}Lemma}
+\newtheorem{observation}{\hspace{1cm}Note}
+\newtheorem{property}{}
+
+\begin{document}
+
+\begin{center}
+	\section*{AN APPROXIMATION ALGORITHM FOR GRAPH CLUSTERING WITH CLUSTERS OF BOUNDED SIZES}
+	\subsection*{Introduction}
+\end{center}
+
+lalallala
+
+	\subsection*{An Approximation Algorithm For Problem $GC^{ \leq s} $}
+
+
+We consider only ordinary graphs, i.e., the graphs without loops and multiple edges. An ordinary graph is called \textit{cluster graph} it its every connected component is a complete graph [1].
+Let $M^{\leq s}(V)$ be the set of all cluster graphs on the set of vertices V, having size of each connected component at most s, $ 2 \leq s \leq |V|$.
+
+If $G_1 = (V,E_1)$ and $G_2 = (V, E_2)$ - ordinary graphs with marked vertices on the same set of vertices V, then \textit{distance} $d(G_1,G_2)$ between they are determined by
+
+$$
+d(G_1,G_2) = |E_1\triangle E_2| = |E_1 \ E_2| + |E_2\ E_1|,
+$$
+
+i.e. $d(G_1,G_2)$ - the number of not matching edges between graphs $G_1$ and $G_2$.
+
+\textbf{Problem $GC^{\leq s}(V)$} Given n-vertices  graph $G = (V,E)$ and integer s,  $2 \leq s \leq |V|$, find a graph $M^* \in M^{\leq s}(V)$, that
+
+$$
+d(G,M^*)= min_{M\in M^{leq s}(V)}d(G,M).
+$$
+
+In paper [2] was proofed that problem $GC^{\leq s}$ is NP-hard for all fixed number $s \geq 3$. For problem $GC^{\leq 3}$ in [2] was introduced polynomial approximation algorithm  with possible guarantee accuracy score
+$ \lfloor \dfrac{(p-1)^2}{2} \rfloor + 1$. In this work we suggest approximated algorithm with guarantee accuracy score 2s-2 for problem $GC^{\leq 3}$. % Формулировку последнего предложения изменю, после упрощения алгоритма А1
+
+
+	\subsection*{Algorithm $A2$}
+\textbf{Input:} Consider arbitrary graph $ G = (V,E), integer s, 3 \leq s \leq |V|$.
+\textbf{Output:} Cluster graph $M = (V_M,E_M)$ - approximate result of solving problem $GC^{s}$.
+\textbf{Iteration $0$.} $V_M \leftarrow 0$, $E_M \leftarrow 0$, $V' \leftarrow 0$, $E' \leftarrow 0$, $G' \leftarrow (V',E')$. Go to iteration 1.
+\textbf{Iteration $i$} ($i \geq 1 $). Creating i-th cluster.
+\textbf{Iteration $1$.} 
+\end{document}
