@@ -53,5 +53,6 @@ $ \lfloor \dfrac{(p-1)^2}{2} \rfloor + 1$. In this work we suggest approximated 
 \textbf{Output:} Cluster graph $M = (V_M,E_M)$ - approximate result of solving problem $GC^{s}$.
 \textbf{Iteration $0$.} $V_M \leftarrow 0$, $E_M \leftarrow 0$, $V' \leftarrow 0$, $E' \leftarrow 0$, $G' \leftarrow (V',E')$. Go to iteration 1.
 \textbf{Iteration $i$} ($i \geq 1 $). Creating i-th cluster.
-\textbf{Iteration $1$.} 
+\textbf{Iteration $1$.} If $V'=0$, then \textbf{END}.
+Else if $V' \neq 0$, then select random vertex  $v\in V', K^i \leftarrow {v}$.
 \end{document}
