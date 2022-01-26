@@ -48,11 +48,22 @@ In paper [2] was proofed that problem $GC^{\leq s}$ is NP-hard for all fixed num
 $ \lfloor \dfrac{(p-1)^2}{2} \rfloor + 1$. In this work we suggest approximated algorithm with guarantee accuracy score 2s-2 for problem $GC^{\leq 3}$. % Формулировку последнего предложения изменю, после упрощения алгоритма А1
 
 
-	\subsection*{Algorithm $A2$}
+\subsection*{Algorithm $A2$}
 \textbf{Input:} Consider arbitrary graph $ G = (V,E), integer s, 3 \leq s \leq |V|$.
-\textbf{Output:} Cluster graph $M = (V_M,E_M)$ - approximate result of solving problem $GC^{s}$.
-\textbf{Iteration $0$.} $V_M \leftarrow 0$, $E_M \leftarrow 0$, $V' \leftarrow 0$, $E' \leftarrow 0$, $G' \leftarrow (V',E')$. Go to iteration 1.
-\textbf{Iteration $i$} ($i \geq 1 $). Creating i-th cluster.
-\textbf{Iteration $1$.} If $V'=0$, then \textbf{END}.
-Else if $V' \neq 0$, then select random vertex  $v\in V', K^i \leftarrow {v}$.
+\\ \textbf{Output:} Cluster graph $M = (V_M,E_M)$ - approximate result of solving problem $GC^{s}$.
+\\ \textbf{Iteration $0$.} $V_M \leftarrow 0$, $E_M \leftarrow 0$, $V' \leftarrow 0$, $E' \leftarrow 0$, $G' \leftarrow (V',E')$. Go to iteration $1$.
+\\ \textbf{Iteration $i$.} ($i \geq 1 $). Creating $i$-th cluster.
+\\ \textbf{Step $1$.} If $V'=0$, then \textbf{END}.
+\\ Else if $V' \neq 0$, then select random vertex  $v\in V', K^i \leftarrow {v}$.
+\\ \textbf{Step $2$.} If $|K^i|<p$, then go to step $3$, else go to step $5$.
+\\ \textbf{Step $3$.} If exist $ u \in V^'$ such that $uv \in E^'$ for any $v \in K^i $, then go to step $4$, else go to step $5$. 
+\\ \textbf{Step $4$.} $K^i \leftarrow K^i\cup {u}$, go to step 2.
+\\ \textbf{Step $5$.} $V_M \leftarrow V_M \cup K^i, E_M \leftarrow E_M \cup { uv | u,v \in K^i }, V^' \leftarrow V^' \ K^i, E^' \leftarrow E^' \ {uv | {u,v} \cap K^i \neq 0}.$ Go to iteration $i+1$
+\\
+\\ \textbf{Notes.}
+\\ \textbf{Step $0$.} $V^'$ - set not distributed by clusters vertices of graph $G$, $G'$ - subgraph of graph $G$ generated from set $V'$.
+\\ \textbf{Step $1$.} Start building new cluster of graph $M$.
+\\ \textbf{Step $2-4$.} Increasing the cluster.
+\\ \textbf{Step $5$.} Clique generated from set $K^i$ put in $M$, after it will delete from graph $G'$ with all incident to its vertices edges.
+
 \end{document}
