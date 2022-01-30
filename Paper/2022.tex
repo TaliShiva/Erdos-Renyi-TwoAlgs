@@ -104,6 +104,20 @@ $$
 \frac{d(G,M)}{d(G,M^*)} \leq \frac{|E_0| + (2s-2)(|E_1| + |E_2|)}{|E_0| + |E_1| + |E_2|} \leq \frac{(2s-2)(|E_1|+|E_2|)}{|E_1| + |E_2|} = 2(s-1).
 $$
 The theorem is proved.
+
+How showing next note, evaluation of (1) is achievable.
+
+\begin{observation}
+	For all $s\geq 3$ exists such graph $G_s$ that:
+	$$
+		d(G_s,M) = (2s-2)d(G,M^*).
+	$$
+\end{observation}
+Graph $G_s$ consisted two cliques $K_s$ and bridge between. On next picture painted example of graph $G_s$ for $s=4$.
+
+As can be seen from the picture $2$, $d(G_4, M^*) = 1$, $d(G_4, M) = 6$ (in case , where on Step 1 in first iteration algorithm $A_2$ choosing vertex $1$ and on step $3$ - vertex $2$) and equality $(2)$ have done.
+Obviously, that for any $s d(G_s,M^*) = 1)$. In worst case cluster graph $M$ for $G_s$ fund by algorithm $A_2$, consisted from clique $K_2$ and two cliques $K_{s-1}$. Therefore $d(G_s,M = 2)$
+
 \end{document}
 
 
