@@ -1,0 +1,734 @@
+\documentclass[runningheads]{llncs}
+
+
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{dratex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\large
+
+
+\title{An approximation algorithm for graph clustering with clusters of bounded sizes}
+
+\author{
+	Victor Il'ev\inst{1,2}        \and
+	Svetlana Il'eva\inst{1}       \and
+	Nikita Gorbunov\inst{2}
+}
+
+\authorrunning{V. Il'ev et al.}
+\titlerunning{An approximation algorithm for graph clustering}
+
+\institute{Dostoevsky Omsk State University, Omsk, Russia \\
+	\email{iljev@mail.ru} \\
+	\email{iljeva@mail.ru}
+	\and Sobolev Institute of Mathematics SB RAS, Omsk, Russia \\
+	\email{gorbunov\_nikita\_v@mail.ru}
+}
+
+\maketitle
+
+\begin{abstract} 
+In graph clustering problems, one has to partition the set of vertices 
+of a graph into disjoint subsets (called clusters) so as to minimize 
+the number of edges between clusters and the number of missing edges 
+within clusters. 
+We consider a version of the problem in which cluster sizes 
+are bounded from above by a positive integer $s$.
+This problem is NP-hard for any fixed $s \geqslant 3$. We propose a 
+polynomial-time approximation algorithm for this version of the problem. 
+Its performance guarantee is better than earlier known bounds. 
+
+\keywords{graph clustering, approximation algorithm, performance guarantee.}
+
+\end{abstract}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Introduction} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Clustering is the problem of grouping an arbitrary
+set of objects so that objects in each group 
+are more similar to each other than to those in other clusters.
+In other words, it is required to partition a given
+set of objects into some pairwise nonintersecting
+subsets (clusters) so that the sum of the number of similarities
+between the clusters and the number of missing similarities
+in the clusters would be minimum.
+
+%There are several suggestions for the measure of similarity
+%between two clusterings. 
+One of the most visual formalizations of clustering 
+is the graph clustering \cite{s05}. 
+A version of this problem is known as the graph approximation problem.
+In this problem, the similarity relation between objects is given by an
+undirected graph whose vertices are in one-to-one correspondence
+to the objects and whose edges connect similar objects. 
+The goal is to partition the set of vertices 
+of a graph into disjoint subsets (called clusters) so as to minimize 
+the number of edges between clusters and the number of missing edges 
+within clusters. 
+The number of clusters can be given, bounded, or
+undefined. The statements and interpretations of the graph
+approximation problem can be found in 
+\cite{aikt06,f71,f76,t74,z64}.
+
+In the sequel, the graph approximation problem was repeatedly and
+independently rediscovered and studied under various names 
+(Correlation Clustering, Cluster Editing, etc. 
+\cite{bbc04,bsy99,sst04}).
+
+This paper is organized as follows.
+Section 1 contains three well-known NP-hard versions of the graph
+clustering problem and a brief survey of basic
+results on computational complexity and approximability
+of these problems. 
+In Section 2, another problem of graph clustering 
+with some bounds on the sizes of clusters is considered. 
+This problem is NP-hard too. Polynomially solvable cases 
+of the problem are discussed. 
+In Section 3, we propose a polynomial-time approximation
+algorithm with a tight performance guarantee $2(s-1)$
+for the problem in which the cluster sizes are bounded
+above by a given number $s \geqslant 3$. 
+Thus, the problem of graph clustering with clusters of bounded sizes 
+belongs to the class APX for every fixed $s$.
+Section 4 contains some approximation algorithms with better performance 
+guarantees for cases $s=3$ and $s=4$. 
+Conclusion summarizes the results of the work.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Graph clustering problems}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We consider only ordinary graphs, i.e., the graphs without loops
+and multiple edges. An ordinary graph is called a {\it cluster graph} 
+if its every connected component is a complete graph \cite{sst04}. 
+Let ${\cal M}(V)$ be the family of all cluster graphs on the set of vertices
+$V$, let ${\cal M}_k(V)$ be the family of all cluster graphs on the
+vertex set $V$ having exactly $k$ connected components,
+and let ${\cal M}_{\leqslant k}(V)$ be the family of all cluster graphs on
+$V$ having at most $k$ connected components, ${2 \leqslant k
+\leqslant |V|}$.
+
+If $G_1 = (V, E_1)$ and $G_2 = (V, E_2)$ are ordinary graphs both
+on the set of vertices $V$, then the distance $d(G_1,G_2)$ between
+them is defined as
+$$
+   d(G_1,G_2)=|E_1 \Delta E_2|=|E_1 \setminus E_2|+|E_2 \setminus E_1|,
+$$
+i.e., $ d(G_1,G_2)$ is the number of distinct edges in $G_1$ and $G_2$. 
+
+In the 1960s-1980s the following three graph approximation
+problems were under study which can be considered as different
+formalizations of the graph clustering problem 
+\cite{f71,f76,if82,t74,z64}:
+
+{\bf Problem $\bf GC$.} Given an ordinary graph  $G \! = \! (V, E)$, find
+a graph ${M^* \! \in \! {\cal M}(V)}$ such that
+$$
+   d(G,M^*)=\min\limits_{M \in {\cal M}(V)} d(G,M).
+$$
+
+{\bf Problem $\bf GC_k$.} Given an ordinary graph  $G \! = \! (V, E)$ and
+an integer $k$, ${2 \leqslant k \leqslant |V|}$, find a graph
+${M^* \! \in \! {\cal M}_k(V)}$ such that
+$$
+   d(G,M^*)=\min\limits_{M \in {\cal M}_k(V)} d(G,M).
+$$
+
+{\bf Problem $\bf GC_{\leqslant k}$.} Given an ordinary graph  $G \! = \! (V, E)$ 
+and an integer $k$, ${2 \leqslant k \leqslant |V|}$, find a graph 
+${M^* \! \in \! {\cal M}_{\leqslant k}(V)}$ such that
+$$
+   d(G,M^*)=\min\limits_{M \in {\cal M}_{\leqslant k}(V)} d(G,M).
+$$
+
+The first theoretical results related to the graph
+approximation problem were obtained in the 
+last century.
+In 1964, Zahn \cite{z64} 
+studied Problem $\bf GC$ for the graphs of some
+special form. 
+In 1971, Fridman \cite{f71}
+defined the first polynomially
+solvable case of Problem $\bf GC$. He showed that Problem
+$\bf GC$ for a graph without triangles can be reduced to constructing 
+maximum matching in this graph. 
+In 1986, K\v{r}iv\'{a}nek and Mor\'{a}vek \cite{km86}
+showed that problem $\bf GC$ is NP-hard, but their article remained unnoticed.
+
+In 2004, Bansal, Blum, and Chawla \cite{bbc04}
+and independently Shamir, Sharan, and Tsur \cite{sst04}
+proved again that Problem $\bf GC$ is NP-hard. 
+In \cite{sst04} it was also proved that
+Problem ${\bf GC_k}$ is NP-hard for every fixed $k \geqslant 2$.
+In 2006, a more simple proof of this result was published 
+by Giotis and Guruswamy \cite{gg06}.
+In the same year, Ageev, Il'ev, Kononov, and Talevnin \cite{aikt06} 
+independently proved that Problems ${\bf GC_2}$ and ${\bf GC_{\leqslant 2}}$ 
+are NP-hard already for cubic graphs, 
+and derived from this that both Problems $\bf GC_k$ and $\bf GC_{\leqslant k}$
+are NP-hard for every fixed $k \geqslant 2$.
+
+In \cite{bbc04},
+a simple 3-approximation algorithm for Problem ${\bf GC_{\leqslant 2}}$ 
+was proposed. In \cite{aikt06}, existence of a randomized polynomial-time 
+approximation scheme for Problem ${\bf GC_{\leqslant 2}}$ was proved, 
+and in \cite{gg06}, a randomized polynomial-time approximation
+scheme was proposed for Problem ${\bf GC_{\leqslant k}}$ (for every fixed 
+${k \geqslant 2}$). In 2008, pointing out that the complexity of the polynomial
+time approximation scheme of \cite{gg06}
+deprives it of practical
+perspectives of using, Coleman, Saunderson and Wirth \cite{csw08}
+proposed some 2-approximation algorithm for Problem ${\bf GC_{\leqslant 2}}$, 
+applying a local search procedure to the feasible solutions 
+obtained by the 3-approximation algorithm of \cite{bbc04}.
+For Problem ${\bf GC_2}$, 
+a 2-approximation algorithm was proposed by Il'ev, Il'eva, and Morshinin 
+\cite{iim19}.
+As regards to Problem ${\bf GC}$, it was shown in 2005 \cite{cgw05}
+that Problem ${\bf GC}$ 
+is APX-hard, and a 4-approximation algorithm was developed. In
+2008, some 2.5-approximation algorithm for Problem ${\bf GC}$ was
+presented in Ailon, Charikar, and Newman \cite{acn08}.
+Finally, in 2015, ($2.06 - \varepsilon$)-appriximation algorithm
+for Problem ${\bf GC}$ was proposed \cite{cmsy15}.
+
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The graph clustering problem with clusters of bounded sizes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In contrast to Problems ${\bf GC_k}$ and ${\bf GC_{\leqslant k}}$, 
+where the restrictions are imposed on
+the number of clusters, we now discuss the problem of graph clustering
+with clusters of bounded sizes. 
+
+Let ${\cal M}^{\leqslant s}(V)$ be the family of all cluster graphs on $V$ such that 
+the size of each connected component is at most some integer $s$,
+${2\leqslant s \leq|V|}$. 
+We say that a cluster graph belongs to
+${\cal M}^s(V)$ if the size of each of its connected components is
+equal to $s$.
+
+{\bf Problem $\bf GC^{\leqslant s}$.} Given an $n$-vertex graph $G = (V,E)$
+and an integer $s$, ${2\leqslant s \leqslant n}$, find $M^* \in {\cal M}^{\leqslant s}(V)$ 
+such that
+$$
+ d(G,M^*)=\min_{M \in {\cal M}^{\leqslant s}(V)} d(G,M).
+$$
+
+{\bf Problem $\bf GC^s$.} Given a graph $G = (V,E)$ such that $|V|
+= sq$, where $s$ and $q$ are positive integers, find $M^* \in
+{\cal M}^{s}(V)$ such that
+$$
+   d(G,M^*)=\min\limits_{M \in {\cal M}^{s}(V)} d(G,M).
+$$
+
+In \cite{bbc04}, in the proof of NP-hardness of Problem $\bf GC$ without
+any constraints on the number and sizes of clusters, it is
+actually shown that Problem ${\bf GC^{\leqslant 3}}$ is NP-hard. 
+In \cite{in11}, the following is proved:
+
+\begin{theorem} {\rm \cite{in11}} \label{t1} 
+Problems $\bf GC^{\leqslant s}$ and 
+$\bf GC^{s}$ are NP-hard for every fixed ${s \geqslant 3}$.
+\end{theorem}
+
+In \cite{in11}, the cases when the optimal solutions to Problems 
+$\bf GC^{\leqslant s}$ and $\bf GC^s$ can be found in polynomial time 
+are also considered:
+
+\begin{theorem} {\rm \cite{in11}} \label{t2} 
+Problems ${\bf GC^{\leqslant 2}}$ and ${\bf GC^2}$ are polynomially solvable.
+Problem ${\bf GC^{\leqslant 3}}$ on graphs without triangles is
+polynomially solvable.
+\end{theorem}
+
+In \cite{iin16}, it is shown that the latter result can be generalized 
+to the case of an arbitrary $s$. 
+
+\begin{theorem} {\rm  \cite{iin16}} \label{t3} 
+Problem ${\bf GC^{\leqslant s}}$ on graphs without triangles is
+polynomially solvable for all $s \geqslant 2$.
+\end{theorem}
+
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{An approximation algorithm for Problem ${\bf GC^{\leqslant s}}$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In \cite{iin16}, for Problem $\bf GC^{\leqslant s}$ ($s \geqslant 3$) a
+polynomial time approximation algorithm with tight performance
+guarantee $\lfloor\frac{(s-1)^2}{2}\rfloor+1$ is proposed. 
+In this section, we offer a polynomial-time approximation algorithm 
+with the performance guarantee $2(s-1$) for this problem.
+
+\medskip
+
+{\bf Algorithm A}
+\\
+\textbf{Input:} An arbitrary graph $G = (V,E)$, an integer $s$, 
+$3 \leqslant s \leqslant |V|$.
+\\
+\textbf{Output:} A cluster graph $M = (V_M,E_M) \in {\cal M}^{\leqslant s}$ -- 
+approximate solution to problem ${\bf GC^{\leqslant s}}$.
+\\ 
+\textbf{Iteration $0$.} $V_M \leftarrow \emptyset$, $E_M \leftarrow \emptyset$, 
+$V' \leftarrow \emptyset$, $E' \leftarrow E$, $G' \leftarrow (V',E')$. 
+Go to iteration $1$.
+\\ 
+\textbf{Iteration $i$} ($i \geqslant 1 $). Constructing $i$-th cluster $K^i$.
+ 
+\textbf{Step 1.} If $V'=\emptyset$, then \textbf{END}.
+Else 
+%if $V' \neq \emptyset$, then 
+select an arbitrary vertex  ${v \in V'}$,\\ $K^i \leftarrow \{v\}$.
+ 
+\textbf{Step 2.} If $|K^i|<s$, then go to step $3$, else go to step $5$.
+ 
+\textbf{Step 3.} If there exists $ u \in V^{'}$ such that $uv \in E^{'}$ for any $v \in K^i $, then go to step $4$, else go to step $5$. 
+ 
+\textbf{Step 4.} $K^i \leftarrow K^i\cup \{u\}$, go to step 2.
+
+\textbf{Step 5.} $V_M \leftarrow V_M \cup K^i$, 
+$E_M \leftarrow E_M \cup \{uv \ | \ u,v \in K^i\}$, 
+$V^{'} \leftarrow V^{'} \setminus K^i$, 
+$E^{'} \leftarrow E^{'} \setminus  \{uv \ | \ \{u,v\} \cap K^i \neq \emptyset\}$.
+Go to iteration $i+1$.
+
+\medskip
+
+\textbf{Comments.}
+
+\textbf{Step 0.} $V^{'}$ is the set of undistributed by clusters 
+vertices of the graph $G$, 
+$G'$ is the subgraph of $G$ induced by the set $V'$.
+
+\textbf{Step 1.} Start constructing a new cluster $K^i$ of the graph $M$.
+
+\textbf{Steps $2-4$.} Increasing the cluster.
+
+\textbf{Step $5$.} Put in $M$ the clique induced by the set $K^i$ 
+and delete it from the graph $G'$ with all edges incident to its vertices.
+
+
+\begin{theorem} \label{t4}
+  Let $G=(V,E)$ be an arbitrary graph, $s$ be an integer, $3 \leqslant s \leqslant |V|$.
+Then
+  \begin{equation}\label{e2}
+  \frac{d(G,M)}{d(G,M^*)} \leqslant 2(s - 1),
+  \end{equation}
+where $M^* = (V_{M^*},E_{M^*})$ is an optimal solution to problem 
+${\bf GC^{\leqslant s}}$ 
+on the graph $G$, $M = (V_M,E_M)$ is the cluster graph constructed 
+by Algorithm A. 
+\end{theorem}
+
+\textbf{Proof.}
+1) By the definition, $d(G,M^*) = |E_G \setminus E_{M^*}| + |E_{M^*} \setminus E_G|$.
+Let $E_G \setminus E_{M^*} = E_0 \cup E_1$, where
+ 
+$E_0$ is the set of edges of the graph $G$ that are not placed neither 
+in $M^*$, nor in $M$ by Algorithm A;
+ 
+$E_1$ is the set of edges of the graph $G$ that are not placed in $M^*$, 
+but are placed in $M$ by Algorithm A.
+
+Denote $E_2 = E_{M^*} \setminus E_G$. Then $d(G,M^*) = |E_0| + |E_1| + |E_2|$.
+
+2) By constructing, the graph $M$ is a subgraph of the graph $G$, 
+therefore $d(G,M) = |E_G \setminus E_M|$.
+Write the difference $E_G \setminus E_M$ in the following form: 
+$E_G \setminus E_M = E_0 \cup \tilde{E}$, where $\tilde{E}$ is the set 
+of edges of G not included in $M$, but placed in $M^*$. 
+Edges of the set $\tilde{E}$ are edges of the graph G between clusters (cliques) 
+of the graph $M$, hence any edge of the set $\tilde{E}$ has the form 
+$e = uv$, where $v \in K^i$, $u \in K^j$ for some $i,j$, $i < j$ 
+(see step 5).
+
+3) Show that any edge of $\tilde{E}$ either is adjacent to an edge 
+of the set $E_1$ in the graph $G$, or is adjacent to an edge of the 
+set $E_2$ in the graph $M^*$.
+
+Consider an arbitrary edge $e = uv$, where $v \in K^i$, $u \in K^j$, $i < j$. 
+Since $i < j$, hence $u \in V'$ by constructing the cluster $K^i$ (on step 1 
+of iteration $i$). At the same time, the vertex $u$ isn't included in the cluster 
+$K^i$. It is possible only in two cases:
+
+a) $|K^i| = s$. Then $|K^i \cup \{u\}| = s + 1$, therefore there exists 
+at least one vertex $w \in K^i$ such that $w$ and $v$ are 
+in different clusters of the graph $M^*$. And since by constructing 
+$K^i$ is the vertex set of a clique of the graph $G$, hence vertices 
+$v$ and $w$ are adjacent in $G$. Therefore, $vw \in E_1$.
+
+b)$|K^i| < s$, but there exists $w \in K^i$ such that $uw \notin E$. If 
+$w$ is placed in the same cluster of the graph $M^*$ as $u$, then $uw\in E_2$. 
+Else, if $w$ and $u$ are in different clusters of the graph $M^*$, 
+then vertices $w$ and $v$ are also in different clusters of $M^*$. 
+As in case a) we get that $vw \in E_1$.
+
+So, it is shown that any edge from $\tilde{E}$ either is adjacent to
+an edge of the set $E_1$ in $G$, or is adjacent to an edge of the set 
+$E_2$ in $M^*$. 
+Hence $\tilde{E} = \tilde{E}_1 \cup \tilde{E}_2$, where
+$$
+\tilde{E}_1 = \{uv \in \tilde{E} \ | \ \exists vw\in E_1\}, 
+\tilde{E}_2 = \{uv \in \tilde{E} \ | \ \exists uw\in E_2\}
+$$
+(it is possible that $\tilde{E}_1 \cap \tilde{E}_2 \neq \emptyset$).
+
+4) Note, that for every edge $uv \in E_1$ there exist at most $2(s-1)$ edges
+of $\tilde{E}_1$ incident to $u$ or $v$ in $G$, 
+and for every edge $uv \in E_2$ there exist at most $2(s-2)$ edges
+of $\tilde{E}_2$ incident to $u$ or $v$ in $G$.
+Hence 
+$$
+d(C,M) \leqslant |E_0| + |\tilde{E}_1| + |\tilde{E}_2| 
+\leqslant |E_0| + 2(s-1)|E_1| + 2(s-2)|E_2|
+$$ $$ 
+\leqslant |E_0|+(2s-1)(|E_1| + |E_2|).
+$$
+Therefore,
+$$
+\frac{d(G,M)}{d(G,M^*)} 
+\leqslant \frac{|E_0| + 2(s-1)(|E_1| + |E_2|)}{|E_0| + |E_1| + |E_2|} 
+\leqslant \frac{2(s-1)(|E_1|+|E_2|)}{|E_1| + |E_2|} = 2(s-1).
+$$
+Theorem \ref{t4} is proved.
+
+\medskip
+
+{\bf Corollary 1.} Problem ${\bf GC^{\leqslant s}}$ belongs to the class APX
+for every fixed $s \geqslant 3$.
+
+\medskip
+
+By the following assertion, bound (\ref{e2}) is tight for any value of $s$.
+
+\medskip
+
+{\bf Remark 1.} For every $s \geqslant 3$, there exists a graph $G_s$
+such that
+\begin{equation}\label{e8}
+d(G_s,M) = 2(s-1)d(G,M^*).
+\end{equation}
+
+\medskip
+
+The graph $G_s$ has $2s$ vertices and consists of
+the two cliques $K_s$ connected by one edge (bridge). Fig. 1 shows an
+example for the case $s = 4$.
+
+
+\begin{figure}[htb]
+
+\Draw%
+\Scale(1,1)
+
+\LineAt(30,20,60,20)
+\LineAt(30,-20,60,-20)
+%\LineAt(0,-20,60,20)
+
+\LineAt(30,-20,60,20)
+
+\LineAt(30,20,60,-20)
+\LineAt(30,20,30,-20)\LineAt(60,20,60,-20)
+\MoveTo(30,20)\PaintCircle(2)\MoveTo(30,-20)\PaintCircle(2)
+\MoveTo(60,20)\PaintCircle(2)\MoveTo(60,-20)\PaintCircle(2)
+\MoveTo(30,27)\Text(--$2$--)\MoveTo(30,-27)\Text(--$7$--)
+\MoveTo(60,27)\Text(--$6$--)\MoveTo(60,-27)\Text(--$8$--)
+
+%\LineAt(30,-25,0,-25)
+
+\LineAt(0,20,-30,20)
+\LineAt(0,-20,-30,-20)
+\LineAt(0,-20,-30,20)\LineAt(0,20,-30,-20)
+\LineAt(0,20,0,-20) \LineAt(-30,20,-30,-20)
+\MoveTo(0,20)\PaintCircle(2)\MoveTo(0,-20)\PaintCircle(2)
+\MoveTo(-30,20)\PaintCircle(2)\MoveTo(-30,-20)\PaintCircle(2)
+\MoveTo(0,27)\Text(--$1$--)\MoveTo(0,-27)\Text(--$5$--)
+\MoveTo(-30,27)\Text(--$3$--)\MoveTo(-30,-27)\Text(--$4$--)
+
+\LineAt(60,20,-20,20)%\LineAt(60,-20,-20,-20)
+
+\EndDraw \caption{The graph $G_4$}\label{f1}
+\end{figure}
+
+\begin{figure}[htb]
+\Draw%
+\Scale(1,1)
+\hspace*{-5mm}
+
+\LineAt(30,20,60,20)\LineAt(30,-20,60,-20)\LineAt(30,-20,60,20)\LineAt(30,20,60,-20)
+\LineAt(30,20,30,-20)\LineAt(60,20,60,-20)
+\MoveTo(30,20)\PaintCircle(2)\MoveTo(30,-20)\PaintCircle(2)
+\MoveTo(60,20)\PaintCircle(2)\MoveTo(60,-20)\PaintCircle(2)
+\MoveTo(30,27)\Text(--$2$--)\MoveTo(30,-27)\Text(--$7$--)
+\MoveTo(60,27)\Text(--$6$--)\MoveTo(60,-27)\Text(--$8$--)
+
+\LineAt(0,20,-30,20)\LineAt(0,-20,-30,-20)\LineAt(0,-20,-30,20)\LineAt(0,20,-30,-20)
+\LineAt(0,20,0,-20)\LineAt(-30,20,-30,-20)
+\MoveTo(0,20)\PaintCircle(2)\MoveTo(0,-20)\PaintCircle(2)
+\MoveTo(-30,20)\PaintCircle(2)\MoveTo(-30,-20)\PaintCircle(2)
+\MoveTo(0,27)\Text(--$1$--)\MoveTo(0,-27)\Text(--$5$--)
+\MoveTo(-30,27)\Text(--$3$--)\MoveTo(-30,-27)\Text(--$4$--)
+
+\MoveTo(15,-43) \Text(--The graph $M^*$--)
+%-----------
+\hspace*{1cm}
+
+\LineAt(120,20,150,20)
+\LineAt(90,20,120,-20) \LineAt(180,20,150,-20)
+\LineAt(90,-20,120,-20) \LineAt(180,-20,150,-20)
+\LineAt(90,20,90,-20) \LineAt(180,20,180,-20)
+
+\MoveTo(150,20)\PaintCircle(2)\MoveTo(150,-20)\PaintCircle(2)
+\MoveTo(180,20)\PaintCircle(2)\MoveTo(180,-20)\PaintCircle(2)
+\MoveTo(150,27)\Text(--$2$--)\MoveTo(150,-27)\Text(--$7$--)
+\MoveTo(180,27)\Text(--$6$--)\MoveTo(180,-27)\Text(--$8$--)
+
+\MoveTo(120,20)\PaintCircle(2)\MoveTo(120,-20)\PaintCircle(2)
+\MoveTo(90,20)\PaintCircle(2)\MoveTo(90,-20)\PaintCircle(2)
+\MoveTo(120,27)\Text(--$1$--)\MoveTo(120,-27)\Text(--$5$--)
+\MoveTo(90,27)\Text(--$3$--)\MoveTo(90,-27)\Text(--$4$--)
+
+\MoveTo(135,-43) \Text(--The graph $M$--)
+
+%\medskip
+
+\EndDraw\caption{The graphs $M^*$ and $M$}\label{f2}
+\end{figure}
+
+
+As we see in Fig. 2, $d(G_4,M^*)=1$, $d(G_4,M)=6$, and equality
+(\ref{e8}) holds.
+
+Clearly, $d(G_s,M^*)=1$. In the worst case the cluster graph $M$
+for $G_s$ found by Algorithm A consists of a clique $K_2$ and two
+cliques $K_{s-1}$, and hence $d(G_s,M) =2(s-1)$. 
+Thus, we obtain (\ref{e8}).
+
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cases $s=3$ and $s=4$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+It is easy to see that 
+$$
+  \Bigg\lfloor\frac{(s-1)^2}{2}\Bigg\rfloor + 1 < 2(s-1) 
+  \ \mbox{ for } s=3, 4,
+$$ 
+and 
+$$ 
+  \Bigg\lfloor\frac{(s-1)^2}{2}\Bigg\rfloor + 1 \geqslant 2(s-1) 
+  \ \mbox{ for all } s \geqslant 5.
+$$
+
+In the cases $s=3$ and $s=4$ for Problem ${\bf GC^{\leqslant s}}$
+the following polynomial-time approximation algorithms can be used 
+\cite{iin16}.  
+Algorithm A1 accepts as input an arbitrary connected graph $G$,
+and Algorithm A2 accepts as input an arbitrary graph $G$
+and uses Algorithm A1 as a procedure.
+
+\medskip
+
+{\bf Algorithm $A1$}
+\\
+\textbf{Input}: A connected graph $G = (V,E)$.
+\\
+\textbf{Output}: A cluster graph $M  \in {\cal M}^{\leqslant s}(V)$.
+
+\textbf{Step 1.} Remove from $G$ all bridges and denote the resulting graph 
+by $M_1$. Go to step 2.
+
+\textbf{Step 2.} Construct a cluster graph $M_2\in {\cal M}^{\leqslant 2}(V)$: 
+find a maximum matching in $G$; the found
+matching forms bimodal components of the cluster graph $M_2$, 
+and the vertices that are not included
+in the matching form its trivial components. Go to step 3.
+
+\textbf{Step 3.} If $M_1 \in {\cal M}^{\leqslant s}(V)$ and 
+$d(G,M_1)\leqslant d(G,M_2)$, then 
+$M \leftarrow M_1$, else $M \leftarrow M_2$.
+%put $M = M_1$; otherwise, $M = M_2$.
+
+\textbf{End.}
+
+\medskip
+
+%In this section we show that (6) remains valid for a disconnected graph.
+%We describe the approximation
+%algorithm for Problem $A^{1,p}$ on an arbitrary graph $G$:
+
+{\bf Algorithm $A2$}
+\\
+\textbf{Input:} An arbitrary graph $G = (V,E)$, where $G_i = (U_i,E_i)$ 
+is the $i$th connected component of $G$,
+$i = 1, \dots , k$ for some $k \in \{1, \dots , |V |\}$.
+\\
+\textbf{Output}: A cluster graph $M  \in {\cal M}^{\leqslant s}(V)$.
+
+\textbf{Step 1.} For every $G_i$ build a graph $M_i \in {\cal}M^{\leqslant s}(U_i)$, 
+$i = 1, \dots , k$, by Algorithm A1. Go to step 2.
+
+\textbf{Step 2.} $M \leftarrow \cup_{i =1}^k M_i$.
+
+\textbf{End.}
+
+\begin{theorem} \label{t5}
+Algorithm A2 is the 3-approximation algorithm for Problem ${\bf GC^{\leqslant 3}}$
+and 5-approximation algorithm for Problem ${\bf GC^{\leqslant 4}}$.
+\end{theorem}
+
+Indeed, it is proved in \cite{iin16} that for every graph $G$
+$$
+  d(G,M) \leqslant d(G,M^*) \Bigg\lfloor\frac{(s-1)^2}{2}\Bigg\rfloor+1,
+$$
+where $M \in {\cal M}^{\leqslant s}(V)$ is the cluster graph built 
+by 
+%Algorithm A1 or 
+Algorithm A2, and $M^*$ is an optimal solution
+to Problem ${\bf GC^{\leqslant s}}$ on $G$.
+We have $\lfloor\frac{(s-1)^2}{2}\rfloor+1 =3$ \ for $s=3$
+and $\lfloor\frac{(s-1)^2}{2}\rfloor+1 =5$ \ for $s=4$.
+
+So, in the cases $s=3$ and $s=4$ bounds 3 and 5 are better than performance guarantee (\ref{e2})
+of Algorithm A.
+%(? So, in cases $s=3$ and $s=4$ Algorithms A1 and A2 are more preferable
+%than Algorithm A ?).
+
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Conclusion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+A version of the graph clustering problem is
+considered. In this version sizes of all clusters don't exceed a
+given positive integer $s$. This problem is NP-hard for every
+fixed $s \geqslant 3$. A new polynomial-time approximation algorithm 
+is presented and a bound on worst-case behaviour of this algorithm 
+is obtained. 
+Some 3-approximation and 5-approximation algorithms
+are proposed for the cases $s=3$ and $s=4$, respectively. 
+Performance guarantees of these algorithms are better 
+than ones of earlier presented approximation algorithms.
+
+\bigskip
+
+\bibliographystyle{splncs04}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{thebibliography}{50}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibitem{aikt06} 
+Ageev, A.A., Il'ev, V.P., Kononov, A.V., Talevnin, A.S.:
+Computational complexity of the graph approximation problem.
+Diskretnyi Analiz i Issledovanie Operatsii. Ser.~1. \textbf{13}(1),
+3--11 (2006) (in Russian). English transl. in: J. of Applied and
+Industrial Math. \textbf{1}(1), 1--8 (2007)
+%
+\bibitem{acn08}
+Ailon, N., Charikar, M., Newman, A.: Aggregating Inconsistent Information:
+Ranking and Clustering. J. of the ACM. \textbf{55}(5), 1--27 (2008)
+%
+\bibitem{bbc04}
+Bansal, N., Blum, A., Chawla, S.: Correlation clustering. Machine
+Learning. \textbf{56}, 89--113 (2004)
+%
+\bibitem{bsy99}
+Ben-Dor, A., Shamir, R., Yakhimi, Z.: Clustering gene expression patterns.
+J. of Computational Biology. \textbf{6}(3--4), 281--297 (1999)
+%
+\bibitem{cgw05}
+Charikar, M., Guruswami, V., Wirth, A.: Clustering with
+qualitative information. J. of Computer and System Science. 
+\textbf{71}(3), 360--383 (2005)
+%
+\bibitem{cmsy15}
+Chawla, S., Makarychev, K., Schramm, T., Yaroslavtsev, G.: Near Optimal
+LP Algorithm for Correlation Clustering on Complete and Complete k-partite
+Graphs. STOC '15 Symposium on Theory of Computing: ACM New York.
+219-228 (2015)
+%
+\bibitem{csw08}
+Coleman, T., Saunderson, J., Wirth, A.:
+A local-search 2-approximation for 2-correlation-clustering.
+Lecture Notes in Computer Science. \textbf{5193}, 308--319 (2008)
+%
+\bibitem{f71}
+Fridman, G.\v{S}.: A Graph Approximation Problem, in Upravlyaemye
+Sistemy. Izd. Inst. Mat., Novosibirsk.  \textbf{8}, 73--75 (1971) (in Russian)
+%
+\bibitem{f76}
+Fridman, G.\v{S}.: Investigation of a Classifying Problem on Graphs. 
+Methods of Modelling and Data Processing (Nauka, Novosibirsk).
+147-177 (1976) (in Russian)
+%
+\bibitem{gg06}
+Giotis, I., Guruswami, V.: Correlation clustering with a
+fixed number of clusters. Theory of Computing.
+\textbf{2}(1), 249--266 (2006)
+%
+\bibitem{if82}
+Il'ev, V.P., Fridman, G.\v{S}.: On the Problem of Approximation
+by Graphs with a Fixed Number of Components.
+Dokl. Akad. Nauk SSSR. \textbf{264}(3), 533--538 (1982) (in Russian).
+English transl. in: Sov. Math. Dokl. \textbf{25}(3), 666--670 (1982)
+%
+\bibitem{in11}
+Il'ev, V.P., Navrotskaya, A.A.: Computational Complexity 
+of the Problem of Approximation by Graphs with Connected Components
+of bounded Size. Prikl. Diskretn. Mat. \textbf{3}(13), 80--84 (2011)
+%
+\bibitem{iin16}
+ Il'ev, V.P., Il'eva, S.D., Navrotskaya, A.A.: Graph Clustering 
+with a Constraint on Cluster Sizes. Diskretn. Anal. Issled. Oper.
+\textbf{23}(3), 50-20 (2016) (in Russian).
+English transl. in: J. Appl. Indust. Math. \textbf{10}(3), 341--348 (2016)
+%
+\bibitem{iim19}
+Il'ev, V., Il'eva, S., Morshinin, A.: A 2-approximation
+algorithm for the graph 2-clustering problem.
+Lecture Notes in Comput. Sci. \textbf{11548}, 295--308 (2019)                  
+%
+\bibitem{km86}
+K\v{r}iv\'{a}nek, M., Mor\'{a}vek, J.: NP-hard problems in
+hierarchical-tree clustering. Acta informatica.
+\textbf{23}, 311--323 (1986)
+%
+\bibitem{s05}
+Schaeffer, S.E.: Graph clustering. Computer Science Review. 
+\textbf{1}(1), 27--64 (2005)
+%
+\bibitem{sst04}
+Shamir, R., Sharan, R., Tsur, D.: Cluster graph modification
+problems. Discrete Appl. Math. \textbf{144}(1--2), 173--182 (2004)
+%
+\bibitem{t74}
+Tomescu, I.: La reduction minimale d'un graphe \`a une reunion de
+cliques. Discrete Math. \textbf{10}(1--2), 173--179 (1974)
+%
+\bibitem{z64}
+Zahn, C.T.: Approximating symmetric relations by equivalence
+relations. J. of the Society for Industrial and Applied
+Mathematics. \textbf{12}(4), 840--847 (1964)
+
+
+\end{thebibliography}
+
+\end{document}
