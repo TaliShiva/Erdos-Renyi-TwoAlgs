@@ -7,5 +7,5 @@
 /// </summary>
 class IGraphFactory {
 public:
-	virtual IGraphPtr CreateGraph(const unsigned size) = 0;
+    virtual IGraphPtr CreateGraph(unsigned size) = 0;
 };

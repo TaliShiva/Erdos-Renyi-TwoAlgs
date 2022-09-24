@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 #include <ostream>
 #include <sstream>
@@ -7,8 +8,7 @@
 /// <summary>
 /// Вспомогательный класс, используемый для выведения в консоль матриц
 /// </summary>
-class MatrixWriter
-{
+class MatrixWriter {
 public:
-	static std::string ToJson(const std::vector<std::vector<bool>>& _adjacency_matrix, const std::string& name);
+    static std::string ToJson(const std::vector<std::vector<bool>> &_adjacency_matrix, const std::string &name);
 };

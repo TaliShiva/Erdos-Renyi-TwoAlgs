@@ -12,24 +12,24 @@
 using namespace std;
 
 int main(int argc, // Number of strings in array argv
-         char* argv[], // Array of command-line argument strings
-         char* envp[]) // Array of environment variable strings
+         char *argv[], // Array of command-line argument strings
+         char *envp[]) // Array of environment variable strings
 {
-	/*const double density = 0.5;
+    /*const double density = 0.5;
     RandomGraphFactory graph_factory(density);
     auto graphPtr = graph_factory.CreateGraph(graph_size);
     cout << (*graphPtr).ToJson();
 
-	edmonds.PreliminaryGreedyMatchBuilding(newGraphPtr);
+    edmonds.PreliminaryGreedyMatchBuilding(newGraphPtr);
     cout << edmonds.ToJson();
     */
 
-	TestEnvironment te;
-	te.Al2AlgOnDiamondGraphCorrectnessTest();
+    TestEnvironment te;
+    te.Al2AlgOnDiamondGraphCorrectnessTest();
     te.Al2AlgOnHouseGraphCorrectnessTest();
     te.Al2SquareWithShortChainGraphCorrectnessTest();
-	te.BnBAlgDiamondGraphCorrectnessTest();
+    te.BnBAlgDiamondGraphCorrectnessTest();
     te.BnBAlgHouseGraphCorrectnessTest();
     te.BnBAlgSquareWithShortChainGraphCorrectnessTest();
-	return 0;
+    return 0;
 }

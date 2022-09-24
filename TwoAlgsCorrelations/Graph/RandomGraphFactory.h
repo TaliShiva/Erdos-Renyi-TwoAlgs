@@ -10,15 +10,16 @@
 /// </summary>
 class RandomGraphFactory : IGraphFactory {
 private:
-	std::random_device rd_;
-	std::default_random_engine gen_{ rd_() };
-	/// <summary>
-	/// ‘ормирует равномерное распределение (каждое значение одинаково веро€тно)
-	/// </summary>
-	std::uniform_real_distribution<> dis_{ 0.0, 1.0 }; 
-	double density_; // плотность графа
+    std::random_device rd_;
+    std::default_random_engine gen_{rd_()};
+    /// <summary>
+    /// ‘ормирует равномерное распределение (каждое значение одинаково веро€тно)
+    /// </summary>
+    std::uniform_real_distribution<> dis_{0.0, 1.0};
+    double density_; // плотность графа
 
 public:
-	RandomGraphFactory(const double density);
-	IGraphPtr CreateGraph(const unsigned size) override;
+    explicit RandomGraphFactory(double density);
+
+    IGraphPtr CreateGraph(unsigned size) override;
 };

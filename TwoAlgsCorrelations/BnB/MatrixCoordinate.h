@@ -1,6 +1,5 @@
 #pragma once
-struct MatrixCoordinate
-{
-	int i;
-	int j;
+struct MatrixCoordinate {
+    int i;
+    int j;
 };
