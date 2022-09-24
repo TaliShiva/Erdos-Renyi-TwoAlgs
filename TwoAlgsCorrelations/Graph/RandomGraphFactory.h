@@ -6,17 +6,17 @@
 #include "IGraphFactory.h"
 
 /// <summary>
-/// Фабрика, создающая графы на основе модели Эрдёша-Реньи
+/// Р¤Р°Р±СЂРёРєР°, СЃРѕР·РґР°СЋС‰Р°СЏ РіСЂР°С„С‹ РЅР° РѕСЃРЅРѕРІРµ РјРѕРґРµР»Рё Р­СЂРґС‘С€Р°-Р РµРЅСЊРё
 /// </summary>
 class RandomGraphFactory : IGraphFactory {
 private:
     std::random_device rd_;
     std::default_random_engine gen_{rd_()};
     /// <summary>
-    /// Формирует равномерное распределение (каждое значение одинаково вероятно)
+    /// Р¤РѕСЂРјРёСЂСѓРµС‚ СЂР°РІРЅРѕРјРµСЂРЅРѕРµ СЂР°СЃРїСЂРµРґРµР»РµРЅРёРµ (РєР°Р¶РґРѕРµ Р·РЅР°С‡РµРЅРёРµ РѕРґРёРЅР°РєРѕРІРѕ РІРµСЂРѕСЏС‚РЅРѕ)
     /// </summary>
     std::uniform_real_distribution<> dis_{0.0, 1.0};
-    double density_; // плотность графа
+    double density_; // РїР»РѕС‚РЅРѕСЃС‚СЊ РіСЂР°С„Р°
 
 public:
     explicit RandomGraphFactory(double density);

@@ -12,7 +12,7 @@ IGraphPtr RandomGraphFactory::CreateGraph(const unsigned size) {
         for (unsigned long j = 0; j < i; j++) {
             if (dis_(gen_) < density_) {
                 adjacency_matrix[i][j] = adjacency_matrix[j][i] = true;
-                //adjacency_matrix[i][j] = j; //TODO: Доработка
+                //adjacency_matrix[i][j] = j; //TODO: Р”РѕСЂР°Р±РѕС‚РєР°
             }
         }
     }

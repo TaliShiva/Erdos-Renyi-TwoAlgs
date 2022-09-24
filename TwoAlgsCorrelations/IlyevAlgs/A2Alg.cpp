@@ -26,42 +26,42 @@ A2Alg::A2Alg(const IGraphPtr &graph, int cluster_size) {
 
 void A2Alg::CreateMGraph() {
     std::vector<std::vector<bool>> k_graph(_matrix_size);
-    std::vector<bool> vertecises_array(_matrix_size); // массив вершин, через который идёт заполнение k_graph-a
+    std::vector<bool> vertecises_array(_matrix_size); // РјР°СЃСЃРёРІ РІРµСЂС€РёРЅ, С‡РµСЂРµР· РєРѕС‚РѕСЂС‹Р№ РёРґС‘С‚ Р·Р°РїРѕР»РЅРµРЅРёРµ k_graph-a
     for (auto &row: k_graph) {
         row = std::vector<bool>(_matrix_size, false);
     }
 
-    // TODO: массивы надо аллоцировать по количеству вершин
-    // проверяем, остались ли какие-то вершины, если нет то выходим из алгоритма
+    // TODO: РјР°СЃСЃРёРІС‹ РЅР°РґРѕ Р°Р»Р»РѕС†РёСЂРѕРІР°С‚СЊ РїРѕ РєРѕР»РёС‡РµСЃС‚РІСѓ РІРµСЂС€РёРЅ
+    // РїСЂРѕРІРµСЂСЏРµРј, РѕСЃС‚Р°Р»РёСЃСЊ Р»Рё РєР°РєРёРµ-С‚Рѕ РІРµСЂС€РёРЅС‹, РµСЃР»Рё РЅРµС‚ С‚Рѕ РІС‹С…РѕРґРёРј РёР· Р°Р»РіРѕСЂРёС‚РјР°
 
     while (checkPossibleContinue()) {
-        //TODO: условие поправить
+        //TODO: СѓСЃР»РѕРІРёРµ РїРѕРїСЂР°РІРёС‚СЊ
         std::cout << MatrixWriter::ToJson(_m_graph, "m_graph_at_start_iteration");
         std::cout << MatrixWriter::ToJson(_adjacency_matrix, "_adjacency_matrix_at_start_iteration");
 
         getNotPointedVertexIfPossible(vertecises_array);
         while (getClusterSize(vertecises_array) <= _cluster_size) {
-            // проверяем  |K_i| < p
+            // РїСЂРѕРІРµСЂСЏРµРј  |K_i| < p
             if (findNeighbourVertex(vertecises_array)) {
-                // ищем подходящих соседей
-                addNeighbourVertexToKGraph(vertecises_array, k_graph); // дополняем кластерный граф
+                // РёС‰РµРј РїРѕРґС…РѕРґСЏС‰РёС… СЃРѕСЃРµРґРµР№
+                addNeighbourVertexToKGraph(vertecises_array, k_graph); // РґРѕРїРѕР»РЅСЏРµРј РєР»Р°СЃС‚РµСЂРЅС‹Р№ РіСЂР°С„
             } else {
-                // нет подходящих соседей
+                // РЅРµС‚ РїРѕРґС…РѕРґСЏС‰РёС… СЃРѕСЃРµРґРµР№
                 break;
             }
         }
-        supplementMGraph(k_graph); // пополняем m graph
-        cutKGraphFromAdjMatrix(k_graph, vertecises_array); // аккуратно удаляем i-й кластер
+        supplementMGraph(k_graph); // РїРѕРїРѕР»РЅСЏРµРј m graph
+        cutKGraphFromAdjMatrix(k_graph, vertecises_array); // Р°РєРєСѓСЂР°С‚РЅРѕ СѓРґР°Р»СЏРµРј i-Р№ РєР»Р°СЃС‚РµСЂ
     }
 }
 
 void A2Alg::cutKGraphFromAdjMatrix(std::vector<std::vector<bool>> &k_graph, std::vector<bool> &vertecises_set) {
     std::vector<int> vertex_nums_in_k_graph;
-    // копируем в массив номер вершин, только те, которые уже есть в рассмотрении
+    // РєРѕРїРёСЂСѓРµРј РІ РјР°СЃСЃРёРІ РЅРѕРјРµСЂ РІРµСЂС€РёРЅ, С‚РѕР»СЊРєРѕ С‚Рµ, РєРѕС‚РѕСЂС‹Рµ СѓР¶Рµ РµСЃС‚СЊ РІ СЂР°СЃСЃРјРѕС‚СЂРµРЅРёРё
 
     getVectorVerNumsInKGraph(vertecises_set, vertex_nums_in_k_graph);
 
-    //TODO: сделал дегенеративное решение, чтобы вырезать столбцы и строки, но ничего не могу поделать
+    //TODO: СЃРґРµР»Р°Р» РґРµРіРµРЅРµСЂР°С‚РёРІРЅРѕРµ СЂРµС€РµРЅРёРµ, С‡С‚РѕР±С‹ РІС‹СЂРµР·Р°С‚СЊ СЃС‚РѕР»Р±С†С‹ Рё СЃС‚СЂРѕРєРё, РЅРѕ РЅРёС‡РµРіРѕ РЅРµ РјРѕРіСѓ РїРѕРґРµР»Р°С‚СЊ
     for (int i = 0; i < _matrix_size; i++) {
         for (int j = 0; j < _matrix_size; j++) {
             if (std::find(vertex_nums_in_k_graph.begin(), vertex_nums_in_k_graph.end(), j) !=
@@ -102,9 +102,9 @@ std::vector<std::vector<bool>> A2Alg::GetCopyOfMGraph() const {
 }
 
 /// <summary>
-/// Проверяем матрицу на возможность работы с ней, суть такая, что в этой матрице не должно быть не отсмотренных рёбер
+/// РџСЂРѕРІРµСЂСЏРµРј РјР°С‚СЂРёС†Сѓ РЅР° РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЂР°Р±РѕС‚С‹ СЃ РЅРµР№, СЃСѓС‚СЊ С‚Р°РєР°СЏ, С‡С‚Рѕ РІ СЌС‚РѕР№ РјР°С‚СЂРёС†Рµ РЅРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РЅРµ РѕС‚СЃРјРѕС‚СЂРµРЅРЅС‹С… СЂС‘Р±РµСЂ
 /// </summary>
-/// <returns> true если с этим алгоритмом ещё можно работать</returns>
+/// <returns> true РµСЃР»Рё СЃ СЌС‚РёРј Р°Р»РіРѕСЂРёС‚РјРѕРј РµС‰С‘ РјРѕР¶РЅРѕ СЂР°Р±РѕС‚Р°С‚СЊ</returns>
 bool A2Alg::checkPossibleContinue() {
     for (int i = 0; i < _matrix_size; i++) {
         for (int j = 0; j < _matrix_size; j++) {
@@ -116,7 +116,7 @@ bool A2Alg::checkPossibleContinue() {
 }
 
 /// <summary>
-/// Получить размер кластера, который рассматриваем в настоящий момент, 
+/// РџРѕР»СѓС‡РёС‚СЊ СЂР°Р·РјРµСЂ РєР»Р°СЃС‚РµСЂР°, РєРѕС‚РѕСЂС‹Р№ СЂР°СЃСЃРјР°С‚СЂРёРІР°РµРј РІ РЅР°СЃС‚РѕСЏС‰РёР№ РјРѕРјРµРЅС‚, 
 /// </summary>
 /// <param name="vertecises_set"></param>
 /// <returns></returns>
@@ -132,7 +132,7 @@ bool A2Alg::findNeighbourVertex(std::vector<bool> &vertecises_set) {
 
     for (int j = 0; j < _matrix_size; j++) {
         if (jVertexHasEdgesWithAllOtherVertexInKraph(j, vertecises_set)) {
-            vertecises_set[j] = true; // поместили вершину, у которой с рассматриваемой есть общее ребро
+            vertecises_set[j] = true; // РїРѕРјРµСЃС‚РёР»Рё РІРµСЂС€РёРЅСѓ, Сѓ РєРѕС‚РѕСЂРѕР№ СЃ СЂР°СЃСЃРјР°С‚СЂРёРІР°РµРјРѕР№ РµСЃС‚СЊ РѕР±С‰РµРµ СЂРµР±СЂРѕ
             return true;
         }
     }
@@ -140,7 +140,7 @@ bool A2Alg::findNeighbourVertex(std::vector<bool> &vertecises_set) {
 }
 
 void A2Alg::getVectorVerNumsInKGraph(std::vector<bool> &vertecises_set, std::vector<int> &vertex_nums_in_k_graph) {
-    // копируем в массив номеров вершин, только те, которые уже есть в рассмотрении
+    // РєРѕРїРёСЂСѓРµРј РІ РјР°СЃСЃРёРІ РЅРѕРјРµСЂРѕРІ РІРµСЂС€РёРЅ, С‚РѕР»СЊРєРѕ С‚Рµ, РєРѕС‚РѕСЂС‹Рµ СѓР¶Рµ РµСЃС‚СЊ РІ СЂР°СЃСЃРјРѕС‚СЂРµРЅРёРё
     for (int i = 0; i < vertecises_set.size(); i++) {
         if (vertecises_set[i]) {
             vertex_nums_in_k_graph.push_back(i);
@@ -156,12 +156,12 @@ bool A2Alg::jVertexHasEdgesWithAllOtherVertexInKraph(int j, std::vector<bool> &v
         if (!_adjacency_matrix[j][k_graph_vertex_num])
             return false;
     }
-    // перебрали все вершина k-кластера
+    // РїРµСЂРµР±СЂР°Р»Рё РІСЃРµ РІРµСЂС€РёРЅР° k-РєР»Р°СЃС‚РµСЂР°
     return true;
 }
 
 /// <summary>
-/// Добавляем вершины в k_graph, выпуская из прохода по матрице строки и столбцы, которые не отмечены как использованные в графе
+/// Р”РѕР±Р°РІР»СЏРµРј РІРµСЂС€РёРЅС‹ РІ k_graph, РІС‹РїСѓСЃРєР°СЏ РёР· РїСЂРѕС…РѕРґР° РїРѕ РјР°С‚СЂРёС†Рµ СЃС‚СЂРѕРєРё Рё СЃС‚РѕР»Р±С†С‹, РєРѕС‚РѕСЂС‹Рµ РЅРµ РѕС‚РјРµС‡РµРЅС‹ РєР°Рє РёСЃРїРѕР»СЊР·РѕРІР°РЅРЅС‹Рµ РІ РіСЂР°С„Рµ
 /// </summary>
 /// <param name="vertecises_set"></param>
 /// <param name="k_graph"></param>
@@ -198,12 +198,12 @@ void A2Alg::getNotPointedVertexIfPossible(std::vector<bool> &vertecises_set) {
 /*
 bool isPossibleClusterGraph()
 {
-	//TODO: является маркированный граф, точками, парами,треугольниками или двумя связанными парами
-	//TODO: либо через запрещённые пойти, есть ли тут треугольники с соплями, три связанных ребра, если то - то плохо
+	//TODO: СЏРІР»СЏРµС‚СЃСЏ РјР°СЂРєРёСЂРѕРІР°РЅРЅС‹Р№ РіСЂР°С„, С‚РѕС‡РєР°РјРё, РїР°СЂР°РјРё,С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°РјРё РёР»Рё РґРІСѓРјСЏ СЃРІСЏР·Р°РЅРЅС‹РјРё РїР°СЂР°РјРё
+	//TODO: Р»РёР±Рѕ С‡РµСЂРµР· Р·Р°РїСЂРµС‰С‘РЅРЅС‹Рµ РїРѕР№С‚Рё, РµСЃС‚СЊ Р»Рё С‚СѓС‚ С‚СЂРµСѓРіРѕР»СЊРЅРёРєРё СЃ СЃРѕРїР»СЏРјРё, С‚СЂРё СЃРІСЏР·Р°РЅРЅС‹С… СЂРµР±СЂР°, РµСЃР»Рё С‚Рѕ - С‚Рѕ РїР»РѕС…Рѕ
 
 	for (int i = 0; i < _size; ++i)
 	{
-		int count_of_marked_edges = 0; // переменная, необходимая для исключения claw-графов
+		int count_of_marked_edges = 0; // РїРµСЂРµРјРµРЅРЅР°СЏ, РЅРµРѕР±С…РѕРґРёРјР°СЏ РґР»СЏ РёСЃРєР»СЋС‡РµРЅРёСЏ claw-РіСЂР°С„РѕРІ
 		for (int j = 0; j < _size; ++j)
 		{
 			if (_current_node_marked_matrix[i][j] == true)
@@ -212,15 +212,15 @@ bool isPossibleClusterGraph()
 			}
 			if (count_of_marked_edges >= 3)
 			{
-				return false; // нашли подграф, в котором есть клешня, а это невозможный случай
+				return false; // РЅР°С€Р»Рё РїРѕРґРіСЂР°С„, РІ РєРѕС‚РѕСЂРѕРј РµСЃС‚СЊ РєР»РµС€РЅСЏ, Р° СЌС‚Рѕ РЅРµРІРѕР·РјРѕР¶РЅС‹Р№ СЃР»СѓС‡Р°Р№
 			}
 		}
 	}
 
-	// Нужен обход в ширину по матрице смежности, с поиском диаметра
+	// РќСѓР¶РµРЅ РѕР±С…РѕРґ РІ С€РёСЂРёРЅСѓ РїРѕ РјР°С‚СЂРёС†Рµ СЃРјРµР¶РЅРѕСЃС‚Рё, СЃ РїРѕРёСЃРєРѕРј РґРёР°РјРµС‚СЂР°
 	for (int i = 0; i < _size; ++i)
 	{
-		int diameter = 0; // переменная, необходимая для подсчёта диаметрка
+		int diameter = 0; // РїРµСЂРµРјРµРЅРЅР°СЏ, РЅРµРѕР±С…РѕРґРёРјР°СЏ РґР»СЏ РїРѕРґСЃС‡С‘С‚Р° РґРёР°РјРµС‚СЂРєР°
 		std::vector<int> vertices{};
 		for (int j = i; j < _size; ++j)
 		{
@@ -240,7 +240,7 @@ bool isPossibleClusterGraph()
 			check_neighbours(diameter, vertices);
 			if (diameter >= 3)
 			{
-				return false; // нашли цепь длины 3 или больше
+				return false; // РЅР°С€Р»Рё С†РµРїСЊ РґР»РёРЅС‹ 3 РёР»Рё Р±РѕР»СЊС€Рµ
 			}
 		}
 	}
@@ -260,7 +260,7 @@ int checkNeighbours(int& diameter, std::vector<int> vertices)
 			}
 		}
 	}
-	//TODO: скипать j-шку отсмотренную
+	//TODO: СЃРєРёРїР°С‚СЊ j-С€РєСѓ РѕС‚СЃРјРѕС‚СЂРµРЅРЅСѓСЋ
 
 	if (!vertices.empty())
 		check_neighbours(diameter, new_neighbours);

@@ -7,14 +7,14 @@
 class IGraph {
 public:
     /// <summary>
-    /// Проверка на то, соединены ли какие-то две вершины
+    /// РџСЂРѕРІРµСЂРєР° РЅР° С‚Рѕ, СЃРѕРµРґРёРЅРµРЅС‹ Р»Рё РєР°РєРёРµ-С‚Рѕ РґРІРµ РІРµСЂС€РёРЅС‹
     /// </summary>
     virtual bool IsJoined(unsigned i, unsigned j) const = 0;
 
     virtual ~IGraph() = default;
 
     /// <summary>
-    /// Размер графа возвращает
+    /// Р Р°Р·РјРµСЂ РіСЂР°С„Р° РІРѕР·РІСЂР°С‰Р°РµС‚
     /// </summary>
     virtual unsigned Size() const = 0;
 

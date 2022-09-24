@@ -9,7 +9,7 @@
 #include "MatrixCoordinate.h"
 
 /// <summary>
-/// Класс, для хранения состояния графа в ноде дерева рассчётов
+/// РљР»Р°СЃСЃ, РґР»СЏ С…СЂР°РЅРµРЅРёСЏ СЃРѕСЃС‚РѕСЏРЅРёСЏ РіСЂР°С„Р° РІ РЅРѕРґРµ РґРµСЂРµРІР° СЂР°СЃСЃС‡С‘С‚РѕРІ
 /// </summary>
 class CalculatedTreeNode {
     int _best_distance = 0;
@@ -45,9 +45,9 @@ public:
     }
 
     /// <summary>
-    /// Считаем расстояние между изначальным графом и графом в ноде
+    /// РЎС‡РёС‚Р°РµРј СЂР°СЃСЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ РёР·РЅР°С‡Р°Р»СЊРЅС‹Рј РіСЂР°С„РѕРј Рё РіСЂР°С„РѕРј РІ РЅРѕРґРµ
     /// </summary>
-    /// <returns> Возвращает расстояние между графами в количестве различных рёбер </returns>
+    /// <returns> Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂР°СЃСЃС‚РѕСЏРЅРёРµ РјРµР¶РґСѓ РіСЂР°С„Р°РјРё РІ РєРѕР»РёС‡РµСЃС‚РІРµ СЂР°Р·Р»РёС‡РЅС‹С… СЂС‘Р±РµСЂ </returns>
     int calculateDistance(const IGraphPtr &graph) {
         const auto graph_size = (*graph).Size();
 
@@ -65,7 +65,7 @@ public:
     }
 
     /// <summary>
-    /// Проверка графа на пустоту
+    /// РџСЂРѕРІРµСЂРєР° РіСЂР°С„Р° РЅР° РїСѓСЃС‚РѕС‚Сѓ
     /// </summary>
     /// <returns></returns>
     bool checkEmptySubGraph() {
@@ -81,9 +81,9 @@ public:
 
 
     /// <summary>
-    /// Проверка, все ли рёбра в графе уже маркированы
+    /// РџСЂРѕРІРµСЂРєР°, РІСЃРµ Р»Рё СЂС‘Р±СЂР° РІ РіСЂР°С„Рµ СѓР¶Рµ РјР°СЂРєРёСЂРѕРІР°РЅС‹
     /// </summary>
-    /// <returns> true - если все ребра совпали, false в обратном случае </returns>
+    /// <returns> true - РµСЃР»Рё РІСЃРµ СЂРµР±СЂР° СЃРѕРІРїР°Р»Рё, false РІ РѕР±СЂР°С‚РЅРѕРј СЃР»СѓС‡Р°Рµ </returns>
     bool checkFullMarking() {
         for (int i = 0; i < _matrix_size; ++i) {
             for (int j = i; j < _matrix_size; ++j) {
@@ -96,7 +96,7 @@ public:
     }
 
     bool isPossibleClusterGraph(bool isResultedGraph) {
-        // копируем в массив номер вершин, только те, которые уже есть в рассмотрении
+        // РєРѕРїРёСЂСѓРµРј РІ РјР°СЃСЃРёРІ РЅРѕРјРµСЂ РІРµСЂС€РёРЅ, С‚РѕР»СЊРєРѕ С‚Рµ, РєРѕС‚РѕСЂС‹Рµ СѓР¶Рµ РµСЃС‚СЊ РІ СЂР°СЃСЃРјРѕС‚СЂРµРЅРёРё
 
         std::set<int> checked_vertesises{};
         for (int i = 0; i < _matrix_size; ++i) {
@@ -105,7 +105,7 @@ public:
                 if (checked_vertesises.find(j) != checked_vertesises.end()) continue;
                 if (_current_node_marked_matrix[i][j]) {
                     if (!is_cluster(checked_vertesises, i, isResultedGraph)) return false;
-                    //если рассмотренный маркированный подграф невозможен выходим
+                    //РµСЃР»Рё СЂР°СЃСЃРјРѕС‚СЂРµРЅРЅС‹Р№ РјР°СЂРєРёСЂРѕРІР°РЅРЅС‹Р№ РїРѕРґРіСЂР°С„ РЅРµРІРѕР·РјРѕР¶РµРЅ РІС‹С…РѕРґРёРј
                 }
             }
         }
@@ -114,7 +114,7 @@ public:
     }
 
     bool is_cluster(std::set<int> &checked_vertesises, int i, bool isResultedGraph) {
-        // сперва получаем список связанных вершин
+        // СЃРїРµСЂРІР° РїРѕР»СѓС‡Р°РµРј СЃРїРёСЃРѕРє СЃРІСЏР·Р°РЅРЅС‹С… РІРµСЂС€РёРЅ
         std::set<int> visited{};
         std::set<int> neighbours{};
         visited.insert(i);
@@ -123,7 +123,7 @@ public:
                 neighbours.insert(j);
             }
         }
-        // прошла первая итерация
+        // РїСЂРѕС€Р»Р° РїРµСЂРІР°СЏ РёС‚РµСЂР°С†РёСЏ
 
         while (!neighbours.empty()) {
             int neighbour = *neighbours.begin();
@@ -136,19 +136,19 @@ public:
             }
             neighbours.erase(neighbour);
         }
-        // на этом моменте у нас типо есть множество вершин
+        // РЅР° СЌС‚РѕРј РјРѕРјРµРЅС‚Рµ Сѓ РЅР°СЃ С‚РёРїРѕ РµСЃС‚СЊ РјРЅРѕР¶РµСЃС‚РІРѕ РІРµСЂС€РёРЅ
 
-        // Проверяем количество вершин, если оно меньше размера предполагаемого кластера - то всё ок, помещаем в массив потенциальных клик и выходим
+        // РџСЂРѕРІРµСЂСЏРµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РІРµСЂС€РёРЅ, РµСЃР»Рё РѕРЅРѕ РјРµРЅСЊС€Рµ СЂР°Р·РјРµСЂР° РїСЂРµРґРїРѕР»Р°РіР°РµРјРѕРіРѕ РєР»Р°СЃС‚РµСЂР° - С‚Рѕ РІСЃС‘ РѕРє, РїРѕРјРµС‰Р°РµРј РІ РјР°СЃСЃРёРІ РїРѕС‚РµРЅС†РёР°Р»СЊРЅС‹С… РєР»РёРє Рё РІС‹С…РѕРґРёРј
         if (!isResultedGraph) {
             if (visited.size() <= 3)
-                return true; // пока что возможен
+                return true; // РїРѕРєР° С‡С‚Рѕ РІРѕР·РјРѕР¶РµРЅ
         }
-        // Потом, проверяем по этому списку получается ли клика какого-то размера или нет
+        // РџРѕС‚РѕРј, РїСЂРѕРІРµСЂСЏРµРј РїРѕ СЌС‚РѕРјСѓ СЃРїРёСЃРєСѓ РїРѕР»СѓС‡Р°РµС‚СЃСЏ Р»Рё РєР»РёРєР° РєР°РєРѕРіРѕ-С‚Рѕ СЂР°Р·РјРµСЂР° РёР»Рё РЅРµС‚
         for (int vertex_num: visited)
             if (!VertexHasEdgesWithAllOtherVertexInCluster(vertex_num, visited)) {
                 return false;
             }
-        // не забыть поместим в checked_vertex нужные вершин
+        // РЅРµ Р·Р°Р±С‹С‚СЊ РїРѕРјРµСЃС‚РёРј РІ checked_vertex РЅСѓР¶РЅС‹Рµ РІРµСЂС€РёРЅ
         checked_vertesises = visited;
         return true;
     }
@@ -159,12 +159,12 @@ public:
             if (!_current_node_marked_matrix[j][vertex_num])
                 return false;
         }
-        // перебрали все вершина k-кластера
+        // РїРµСЂРµР±СЂР°Р»Рё РІСЃРµ РІРµСЂС€РёРЅР° k-РєР»Р°СЃС‚РµСЂР°
         return true;
     }
 
     /// <summary>
-    /// Помечаем ребро
+    /// РџРѕРјРµС‡Р°РµРј СЂРµР±СЂРѕ
     /// </summary>
     void markEdge(MatrixCoordinate matrix_coordinate) {
         _current_node_marked_matrix[matrix_coordinate.i][matrix_coordinate.j] = true;
