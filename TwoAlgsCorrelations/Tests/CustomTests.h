@@ -90,4 +90,16 @@ public:
         bnb.startCalclulating();
         std::cout << "____________________________________________" << std::endl;
     }
+
+    void BnBAlgRandomTest() {
+        std::cout << "START TEST BnBAlgRandomTest" << std::endl;
+
+        _newGraphPtr = RandomGraphFactory::CreateGraph(10);
+        int graph_size = 6;
+        std::cout << MatrixWriter::ToJson((*_newGraphPtr).GetCopyOfAdjacencyMatrix(), "Start Graph");
+
+        BranchAndBounds bnb = BranchAndBounds(graph_size, _newGraphPtr);
+        bnb.startCalclulating();
+        std::cout << "____________________________________________" << std::endl;
+    }
 };

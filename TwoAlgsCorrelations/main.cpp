@@ -31,5 +31,6 @@ int main(int argc, // Number of strings in array argv
     te.BnBAlgDiamondGraphCorrectnessTest();
     te.BnBAlgHouseGraphCorrectnessTest();
     te.BnBAlgSquareWithShortChainGraphCorrectnessTest();
+    te.BnBAlgRandomTest();
     return 0;
 }
